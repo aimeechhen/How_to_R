@@ -112,7 +112,7 @@ rstudioapi::addTheme(oceanic_eighties, apply = TRUE)
 
 #when you select a word, this highlights the matching word found through out script
 .ace_marker-layer .ace_selection {
-  background: #004488;
+  background: #0077BB;
 
 #to modify selected line
 .ace_marker-layer .ace_active-line {
@@ -120,7 +120,7 @@ rstudioapi::addTheme(oceanic_eighties, apply = TRUE)
 
     #color of the word highlighted/selected
     .ace_marker-layer .ace_selected-word {
-      background: #0077BB;
+      background: #004488;
     }
     
 #............................................................
