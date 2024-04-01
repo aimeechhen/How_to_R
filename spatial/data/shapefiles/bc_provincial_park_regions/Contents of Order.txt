@@ -1,0 +1,20 @@
+------------------
+Order Details
+-----------------
+Order ID: 2346852
+Date: 20240213
+------------------
+Order Details
+-----------------
+Order ID: 2346852
+Date: 20240213
+
+----------------------
+Feature Types
+-----------------------
+ - Parks and Protected Areas Regional Boundaries in directory PARK_REG
+ - BC Parks, Ecological Reserves, and Protected Areas in directory TA_PEP_SVW
+
+----------------------------
+Packaged Products
+----------------------------
