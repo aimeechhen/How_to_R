@@ -1,0 +1,138 @@
+[
+	{
+		"title" : "BC Parks, Ecological Reserves, and Protected Areas",
+		"name" : "bc-parks-ecological-reserves-and-protected-areas",
+		"bcdc_data_resource_url" : "https://catalogue.data.gov.bc.ca/dataset/1130248f-f1a3-4956-8b2e-38d29d3e4af7",
+		"description" : "This dataset contains parks and protected areas managed for important conservation values and are dedicated for the preservation of their natural environments for the inspiration, use and enjoyment of the public. Places of special ecological importance are designated as ecological reserves for scientific research and educational purposes. Source data is Tantalis. \r\n*April 18, 2018: Prior to this date this dataset had one spatial boundary per park per survey plan that intersected the boundary of that park. This resulted in multiple identical boundaries for each park that had more than one survey plan overlapping it’s boundaries. The change aggregated the park data so that there is just one boundary per park with the plan numbers concatenated into a single column where each different plan number is separated by a comma.",
+		"purpose" : "The information about parks, ecological reserves, and protected areas represented in this view can be used to support a variety of purposes including, but not limited to: land use planning processes (e.g. Forest Stewardship Planning); statutory processes (e.g. free miner notification under the Mineral Tenure Act); and timber supply review processes. The parks, ecological reserves, and protected areas represented in this view are a subset of the Crown tenure types held in the Crown Land Registry system (Tantalis). This dataset is a spatial representation of BC parks, ecological reserves and protected areas. Legal description of these boundaries can be found through the legislation or order in council describing the boundaries and any accompanying official plan.",
+		"bcdc_type" : "Webservice",
+		"last_modified" : "2024-02-13T12:00:02",
+		"resource_storage_location" : "Bc Geographic Warehouse",
+		"object_name" : "WHSE_TANTALIS.TA_PARK_ECORES_PA_SVW",
+		"object_short_name" : "TA_PEP_SVW",
+		"projection_name" : "epsg4326",
+		"license_title" : "Open Government Licence - British Columbia",
+		"license_url" : "https://www2.gov.bc.ca/gov/content?id=A519A56BC2BF44E4A008B33FCF527F61",
+		"details" : [
+			{
+				"data_precision" : 38,
+				"column_comments" : null,
+				"short_name" : "ADMIN_AREA",
+				"data_type" : "NUMBER",
+				"column_name" : "ADMIN_AREA_SID"
+			},
+			{
+				"data_precision" : 200,
+				"column_comments" : null,
+				"short_name" : "PROT_NAME",
+				"data_type" : "VARCHAR2",
+				"column_name" : "PROTECTED_LANDS_NAME"
+			},
+			{
+				"data_precision" : 8,
+				"column_comments" : null,
+				"short_name" : "PROT_CODE",
+				"data_type" : "VARCHAR2",
+				"column_name" : "PROTECTED_LANDS_CODE"
+			},
+			{
+				"data_precision" : 50,
+				"column_comments" : null,
+				"short_name" : "PROT_DESG",
+				"data_type" : "VARCHAR2",
+				"column_name" : "PROTECTED_LANDS_DESIGNATION"
+			},
+			{
+				"data_precision" : 240,
+				"column_comments" : null,
+				"short_name" : "PARK_CLASS",
+				"data_type" : "VARCHAR2",
+				"column_name" : "PARK_CLASS"
+			},
+			{
+				"data_precision" : 4000,
+				"column_comments" : null,
+				"short_name" : "SRV_GEN_PL",
+				"data_type" : "VARCHAR2",
+				"column_name" : "SURVEYOR_GENERAL_PLAN_NO"
+			},
+			{
+				"data_precision" : 4,
+				"column_comments" : null,
+				"short_name" : "ORC_PRIMRY",
+				"data_type" : "VARCHAR2",
+				"column_name" : "ORCS_PRIMARY"
+			},
+			{
+				"data_precision" : 2,
+				"column_comments" : null,
+				"short_name" : "ORC_SCNDRY",
+				"data_type" : "VARCHAR2",
+				"column_name" : "ORCS_SECONDARY"
+			},
+			{
+				"data_precision" : 7,
+				"column_comments" : null,
+				"short_name" : "EST_DATE",
+				"data_type" : "DATE",
+				"column_name" : "ESTABLISHMENT_DATE"
+			},
+			{
+				"data_precision" : 21,
+				"column_comments" : null,
+				"short_name" : "OFFL_AR_HA",
+				"data_type" : "NUMBER",
+				"column_name" : "OFFICIAL_AREA_HA"
+			},
+			{
+				"data_precision" : 512,
+				"column_comments" : null,
+				"short_name" : "PMP_URL",
+				"data_type" : "VARCHAR2",
+				"column_name" : "PARK_MANAGEMENT_PLAN_URL"
+			},
+			{
+				"data_precision" : 10,
+				"column_comments" : null,
+				"short_name" : "F_CODE",
+				"data_type" : "VARCHAR2",
+				"column_name" : "FEATURE_CODE"
+			},
+			{
+				"data_precision" : 64,
+				"column_comments" : null,
+				"short_name" : "SHAPE",
+				"data_type" : "SDO_GEOMETRY",
+				"column_name" : "SHAPE"
+			},
+			{
+				"data_precision" : 19,
+				"column_comments" : null,
+				"short_name" : "AREA_SQM",
+				"data_type" : "NUMBER",
+				"column_name" : "FEATURE_AREA_SQM"
+			},
+			{
+				"data_precision" : 19,
+				"column_comments" : null,
+				"short_name" : "FEAT_LEN",
+				"data_type" : "NUMBER",
+				"column_name" : "FEATURE_LENGTH_M"
+			},
+			{
+				"data_precision" : 38,
+				"column_comments" : "OBJECTID is a required attribute of feature classes and object classes in a geodatabase. ",
+				"short_name" : "OBJECTID",
+				"data_type" : "NUMBER",
+				"column_name" : "OBJECTID"
+			},
+			{
+				"data_precision" : 4000,
+				"column_comments" : null,
+				"short_name" : null,
+				"data_type" : "BLOB",
+				"column_name" : "SE_ANNO_CAD_DATA"
+			}
+		]
+	}
+]
