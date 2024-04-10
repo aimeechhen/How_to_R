@@ -9,6 +9,14 @@ library(bcmaps)
 transform_bc_albers()
 
 
+#..........................................
+
+# Canada Albers Equal Area Conic projection
+ca_albers <- "ESRI:102001"
+ca_albers <- "EPSG:102001"
+
+
+
 
 #..........................................
 
@@ -31,3 +39,6 @@ epsg_53018 <- crs("+init=epsg:53018")
 
 # Project the spatvector object to EPSG:53018
 china_projected <- project(china, epsg_53018)
+
+
+
