@@ -1,17 +1,26 @@
 
 # base r plotting
 
-png(file = "figures/individual figures/figure2_right_overlap.png", width = 2.86, height = 6, units = "in", res = 600)
-par(mfrow=c(2,1))
+#http://www.sthda.com/english/wiki/graphical-parameters
+
+#save plot
+png(file = "figures/figure1.png", width = 6.86, height = 6, units = "in", res = 600)
+par(mfrow=c(2,1))                    # plot arrangement
 par(mgp = c(2, 0.5, 0))             #Adjust the third element (margin for axis title spacing)
 par(mar = c(3, 3, 1.25, 0.25))      #margin defaults (order: bottom, left, top, and right)
 plot(AKDE_1, 
      col.DF = COL_1, 
      col.level = COL_1, 
      col.grid = NA, 
+     col = rainbow(49),
+     col = viridis(5), 
+     las = 2, 
+     pch = ,                
      level = NA,
      lwd.level = 1,            #line thickness
+     lwd = 3,                  #line thickness
      #font=2,                  #bold axis text
+     font.lab = 2,             #bold axis labels
      cex.lab = 1,              #size of axis title
      cex.axis = 0.8,           #size of axis text font
      axes = FALSE,             #remove all axes
@@ -19,8 +28,13 @@ plot(AKDE_1,
      xlab = "",                #remove x-axis label
      yaxt="n",                 #remove y-axis text
      xaxt="n",                 #remove x-axis text
-     font.lab = 2)             #bold axis labels
+     main = "Christoffer and Kyle") #add title
 title("C", adj = 0)
+axis(side = 2, at = seq(0,9000,by = 1000)) #manually add axis tick lables (xaxis -> side = 1; yaxis -> side = 2)
+legend(legend = c("uncorrelated drift and diffusion", "uncorrelated drift and correlated diffusion"))
+abline(0,0, col = "red") 
+
+#add another layer to the plot
 plot(canada_wintri,
      col="white",              #fill
      border = "darkgrey",      #boundary colours
