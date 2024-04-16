@@ -1,0 +1,307 @@
+Workshop overview:
+
+-   For loops
+-   Conditional (if/else) statements
+-   Additional practice problems
+
+###GETTING STARTED
+
+```{r}
+#install.packages('openintro')
+#install.packages('dplyr')
+#install.packages('gapminder')
+
+library(openintro)
+library(dplyr)
+library(gapminder)
+
+```
+
+We will be using three datasets in this workshop:
+
+(1) 'countries' from the gapminder package - Macroeconomic (e.g. GDP per
+    capita) and demographic (e.g. population) data for every country in
+    the world, by year
+
+```{r}
+countries <- gapminder # create a data frame
+head(countries) #see the first six rows of the dataframe
+```
+
+(2) 'storms' from the dplyr package - Location and weather data for
+    hurricanes in the US
+
+```{r}
+head(storms)
+```
+
+(3) 'midterms' from the openintro package - midterm election results by
+    year, party, and unemployment rate
+
+```{r}
+midterms <- midterms_house
+head(midterms)
+```
+
+###FOR LOOPS
+
+For loop's basic structure
+
+for (i in vector/list/matrix/dataframe){ some operation with i }
+
+one step in a loop = one 'iteration'
+
+numeric vector example:
+
+```{r}
+#a simple loop: 
+
+numbers <- 1:10 #creating a vector of numbers 1 through 10 
+
+for (i in numbers){
+  print(i)
+}
+
+for (i in numbers){
+  print(i)
+  Sys.sleep(0.5) #this staggers each output by 0.5 seconds
+}
+
+#in this illustrative example, you need to include print, or the loop will run without producing output. 
+```
+
+numeric vector example:
+
+```{r}
+other_numbers <- c(4,7,5,2,2,3,1)
+
+for (i in other_numbers){
+  print(i) #i is looped through in the given order 
+}
+```
+
+character vector example:
+
+```{r}
+letters #displaying built-in alphabet vector 
+
+for (i in letters){
+  print(i)
+}
+```
+
+```{r}
+matrix <- matrix(nrow = 3, ncol = 5, c(1:15))
+matrix
+
+for (i in matrix){
+  print(i)
+}
+```
+
+dataframe example:
+
+```{r}
+###looping through the unique political parties in our midterms dataset
+for (i in unique(midterms$party)){
+  print(i)
+}
+
+#note i is an object and never in quotes. i is commonly-used 
+#but arbitrary. You can make it more meaningful to you if thats easier, e.g.: 
+
+for (Parties in unique(midterms$party)){
+  print(Parties)
+}
+```
+
+Applying an operation by looping through the parties in the midterms
+dataset
+
+```{r}
+###finding the maximum value of house_change for each party
+#if we wanted to do this for ONE party, e.g. Republican 
+
+max(midterms$house_change[midterms$party == 'Republican'])
+
+#uses square brackets to subset, will be using this throughout the workshop
+```
+
+individual components we need to build our for loop:
+
+1.  unique(midterms$party)
+2.  max(midterms$house_change[midterms$party == Party])
+3.  for loop struture:
+
+for (i in vector){ operation }
+
+```{r}
+#building this into a for loop, for all parties
+for (i in unique(midterms$party)){
+  x <- max(midterms$house_change[midterms$party == i])
+  print(x)
+}
+
+#can save as an object or embed max within print , i.e 
+#print(max(countries$gdpPercap[countries$country == i]))
+```
+
+#PRACTICE TOGETHER
+
+Another example, with a different dataset: finding the average latitude
+for each storm in the 'storms' dataset 
+
+individual components we need to build our for loop:
+
+1.  unique(storms$name)
+2.  mean(storms$lat[storms$name == Storm name])
+3.  for loop struture:
+
+for (i in vector){ operation }
+
+```{r}
+#storms dataset, from dplyr
+head(storms)
+
+#finding the average latitude for each storm in the dataset 
+
+```
+
+#PRACTICE:
+
+Using the 'countries' dataset, use a for loop to find the maximum value
+of GDP per capita (gdpPercap) for each country
+
+```{r}
+#answer: 
+
+```
+
+Saving the output of your for loop:
+
+lets create a new dataset called 'country_sum', of summary variables by country, with country as one column and max gdp per capita as another
+
+```{r}
+#creating empty vectors for the values we want to store
+country <- 0
+maxgdp <- 0
+
+#to store values in a vector, we need to create a count, to add values to a vector as we move through each iteration of the loop 
+index <- 1
+
+#vector[x] points to position x in the vector
+
+for (i in unique(countries$country)){
+  maxgdp[index] <- max(countries$gdpPercap[countries$country == i])
+    #create vector of max gdpPercap values by country 
+  country[index] <- i #create vectors of countries
+  print(index) #print index at each iteration (not required)
+  index <- index + 1 #add one to the index to avoid replacement
+}
+
+#look at our new vectors
+head(maxgdp)
+head(country)
+
+#combine vectors into a dataframe
+country_sum <- data.frame(country, maxgdp)
+head(country_sum)
+
+#there are other ways of doing this, by creating a dataframe and using that directly in the for-loop, but I think this format is more beginner-friendly 
+```
+
+#PRACTICE:
+
+modify the code below to create a new dataframe with two columns: Party,
+and max midterms house change (x in the example code). Name your columns
+however you'd like.
+
+```{r}
+
+#original code:
+for (i in unique(midterms$party)){
+  x <- max(midterms$house_change[midterms$party == i])
+  print(x)
+}
+
+#answer: 
+
+```
+
+IF/ELSE STATEMENTS
+
+Basic structure of an if statement:
+
+if (logical statement){ operation true}
+
+can be expanded to an if/else statement:
+
+if (logical statement){ operation if true} else{operation if false}
+
+examples of logical statements:
+
+x > 5 
+x == 4 
+x == "cat" 
+x != 0
+x %in% c("cat", "dog", "mouse")
+
+Simple example:
+
+```{r}
+
+x = 6 #set x to 6 
+
+if (x > 5){
+  print("x is greater than 5")
+}
+
+x = 4 #set x to 4 
+
+#add an else statement 
+if (x > 5){
+  print("x is greater than 5")
+} else {
+  print("x is less than 5")
+}
+```
+
+if/else statement become very useful when embedded within a for loop:
+
+```{r}
+
+#e.g., create a binary variable for Republican (1) and Democrat (0)
+
+midterms$binary <- NA
+
+for (i in 1:nrow(midterms)){
+if(midterms$party[i] == 'Republican'){
+  midterms$binary[i] = 1} else {
+    midterms$binary[i] = 0
+  }
+}
+
+head(midterms)
+```
+
+###PRACTICE
+
+```{r}
+#e.g., create a binary variable/column in the countries dataset called eurasia_bin, with values of 'Eurasia' and 'Elsewhere', based on this list (it is not totally accurate, but suitable for the purpose of practice): 
+
+eurasia <- c("Europe", "Asia")
+
+#(hint: you need to use %in%)
+
+#answer:
+```
+###BONUS QUESTION
+
+Loop through the storms dataset and calculate mean latitude for each storm. Store this in a new dataframe with storm name. 
+
+Then, create a new grouping variable for latitude, with three levels: 'North' (>30), 'Central' (>=20, <=30), 'South' (<20). 
+
+```{r}
+#answer: 
+
+```
