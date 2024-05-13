@@ -9,7 +9,7 @@ par(mfrow=c(2,1))                    # plot arrangement
 par(mgp = c(2, 0.5, 0))             #Adjust the third element (margin for axis title spacing)
 par(mar = c(3, 3, 1.25, 0.25))      #margin defaults (order: bottom, left, top, and right)
 plot(AKDE_1, 
-     col.DF = COL_1, 
+     col.DF = COL_1,        #may give you errors when trying to plot UD, use col.UD=
      col.level = COL_1, 
      col.grid = NA, 
      col = rainbow(49),
@@ -41,3 +41,19 @@ plot(canada_wintri,
      lwd = 5,                  #line thickness (1 = default?)
      add = TRUE)               # Add another layer
 dev.off()
+
+
+
+#____________________________________________________
+# ctmm package
+plot(AKDE_1_reproj, 
+     col.level = COL_1,
+     col.UD=COL_1,             #change colours of UD utilization distribution
+     col.grid = NA, 
+     level = NA,
+     lwd.level = 1,            #line thickness
+     #font=2,                  #bold axis text
+     cex.lab = 1,              #size of axis title
+     cex.axis = 0.8,           #size of axis text font
+     font.lab = 2)             #bold axis labels
+title("C", adj = 0)
