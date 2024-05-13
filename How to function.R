@@ -1,6 +1,8 @@
 
 
 
+
+
 #_________________________________________________________________________
 # How to import files ----
 
@@ -16,6 +18,29 @@ names(pmf_rasters) <- gsub("\\.tif$", "", basename(hr_pmf_list))
 
 
 #_________________________________________________________________________
+# Data wrangling ----
+
+#subset or drop data based on conditions
+goat_data <- goat_data[!(goat_data$date <= "2019-06-23"),]
+
+#combine two datasets and not including a certain condition via filter() using dplyr package
+goat_data <- left_join(goat_data, filter(goat_info, goat_id != "CA03"), by = "collar_id")
+
+grepl() # select objects that contains certain text
+hr.shp <- combined_sf[grepl("95% est", combined_sf$name), ]
+
+rownames()
+df$column <- rownames(df) #extract rownames into column
+
+
+library(stringr)
+str_detect() # select objects that contains certain text
+hr95.shp = hr.shp[str_detect(hr.shp$name, "est"),]
+
+
+
+
+
 # How to extract text ----
 
 #extract text before the first _ underscore (i.e. season)
@@ -32,19 +57,15 @@ rsf_coeff[grepl("spring", rsf_coeff$individual.local.identifier),"season"] <- "s
 rsf_coeff[grepl("summer", rsf_coeff$individual.local.identifier),"season"] <- "summer"
 
 
-#_________________________________________________________________________
-
-
-# create new dataset based on making all the possible combinations
-newd <- expand_grid(
-  Time = seq(0, 21, length.out = 400),
-  Diet = unique(ChickWeight$Diet), # since we are using fixed effects
-  Chick = 'new chick') # since we are using random effects
 
 
 
 #_________________________________________________________________________
 # Save outputs into a textfile ----
+
+sink() # export and save output of function, requires to terminate exportation process once completed 
+
+
 
 #export and save summary output to a textfile
 sink("data/home_range/m_hr_spring_summary.txt")
@@ -57,3 +78,11 @@ print(-0.1105 + c(-1.96,1.96) * 0.1670)
 sink() #terminate output exporting connection/process (multiple functions can be exported)
 
 
+#_________________________________________________________________________
+
+
+# create new dataset based on making all the possible combinations
+newd <- expand_grid(
+  Time = seq(0, 21, length.out = 400),
+  Diet = unique(ChickWeight$Diet), # since we are using fixed effects
+  Chick = 'new chick') # since we are using random effects
