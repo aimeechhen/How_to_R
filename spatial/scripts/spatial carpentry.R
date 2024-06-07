@@ -48,3 +48,37 @@ elevation_resampled <- resample(elevation_raster_crop_reproj, hfi_raster_crop_re
 HFI <- hfi_raster_crop_reproj
 soil <- soil_resampled
 elevation_m <- elevation_resampled
+
+
+
+#Convert goat coordinates to sf object, spatial data points
+coord_sf <- st_as_sf(goat_gps, coords = c("location.long", "location.lat"))
+#Retrieve coordinate reference system (CRS) and set the CRS to a geographic coordinate system (e.g., WGS 84)
+st_crs(coord_sf) <- st_crs("+proj=longlat +datum=WGS84")
+
+
+
+
+
+#.................................................
+# from Stefano
+
+# finding the center between series of points
+data.frame(long = c(11.1, 23.7), lat = c(42.6, 52.7)) %>%
+  st_as_sf(coords = c('long', 'lat')) %>%
+  st_set_crs('EPSG:4326') %>%
+  st_union() %>%
+  st_centroid()
+
+# add another variable if you want to keep groups separate
+data.frame(long = rnorm(100),
+           lat = rnorm(100),
+           group = sample(c('a', 'b'), 100, replace = TRUE)) %>%
+  st_as_sf(coords = c('long', 'lat')) %>%
+  st_set_crs('EPSG:4326') %>%
+  group_by(group) %>%
+  summarise(geometry = st_union(geometry)) %>%
+  ungroup() %>%
+  st_centroid()
+
+#................................................................
