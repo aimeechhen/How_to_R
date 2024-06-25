@@ -1,7 +1,7 @@
 
 
-
-
+#put a solid black line, you can change the "#px" to change the size eg. 5px for R Markdown
+<div style="border-bottom: 3px solid black;"></div>
 
 #_________________________________________________________________________
 # How to import files ----

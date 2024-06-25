@@ -116,7 +116,7 @@ rstudioapi::addTheme(oceanic_eighties, apply = TRUE)
 
 #to modify selected line
 .ace_marker-layer .ace_active-line {
-  background: #000000;
+  background: #f0f0f0;
 
     #color of the word highlighted/selected
     .ace_marker-layer .ace_selected-word {
@@ -139,6 +139,8 @@ rstudioapi::addTheme(oceanic_eighties, apply = TRUE)
 #Yellow
 "#eecc66"
 
+
+"#f0f0f0"
 #............................................................
 
 # Additional rsthemes not part of the base16

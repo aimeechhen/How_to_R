@@ -43,7 +43,7 @@ crop() #trim/cut raster
 stack() #combine rasters
 brick()
 extract(raster, point) #extract raste values at points
-intersectExtent # set extents to overlap area
+intersectExtent() # set extents to overlap area
 
 
 
@@ -56,6 +56,9 @@ crs() #get/set coordinate reference system (crs)
 same.crs() #compare coordinate reference systems
 ext(GOAT_HR)
 project(GOAT_HR, "+proj=longlat +datum=WGS84")
+scale() #scale/center raster data
+
+
 c() #combine SpatRasters (multiple layers), note: must have the same extent & resolution
 merge() #combine SpatRasters with different extents (but same origin and resolution)
 mosaic() #combine SpatRasters with different extents using a function for overlapping cells

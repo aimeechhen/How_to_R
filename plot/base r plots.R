@@ -9,7 +9,8 @@ par(mfrow=c(2,1))                    # plot arrangement
 par(mgp = c(2, 0.5, 0))             #Adjust the third element (margin for axis title spacing)
 par(mar = c(3, 3, 1.25, 0.25))      #margin defaults (order: bottom, left, top, and right)
 plot(AKDE_1, 
-     col.DF = COL_1,        #may give you errors when trying to plot UD, use col.UD=
+     col.DF = COL_1,        #Color option for the density function. Can be an array. Note: may give you errors when trying to plot UD, use 'col.UD= '
+     col.UD = COL_1,         #Color option for UDs
      col.level = COL_1, 
      col.grid = NA, 
      col = rainbow(49),
@@ -30,7 +31,12 @@ plot(AKDE_1,
      xaxt="n",                 #remove x-axis text
      main = "Christoffer and Kyle") #add title
 title("C", adj = 0)
-axis(side = 2, at = seq(0,9000,by = 1000)) #manually add axis tick lables (xaxis -> side = 1; yaxis -> side = 2)
+
+# modify axis titles, ensure you remove them first, see above
+# xaxis: side = 1
+# yaxis: side = 2
+axis(side = 2, at = seq(0,9000,by = 1000)) #manually add axis tick labels 
+axis(side = 2, las = 2) # Rotate the axis labels (title).
 legend(legend = c("uncorrelated drift and diffusion", "uncorrelated drift and correlated diffusion"))
 abline(0,0, col = "red") 
 
