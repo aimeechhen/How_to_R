@@ -6,9 +6,29 @@
 #............................................................
 
 library(geobr)           #shape files for Brazil
+library(ggplot2)
+
+# country outline
+br <- read_country(year = 2020, simplified = TRUE, showProgress = TRUE)
+
+# Remove plot axis
+no_axis <- theme(axis.title=element_blank(),
+                 axis.text=element_blank(),
+                 axis.ticks=element_blank())
+plot_br <- 
+ggplot() +
+  geom_sf(data=br, fill = "white", color="black", size=.15, show.legend = FALSE) +
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position="none") +
+  no_axis
+
+ggsave(plot = plot_br, filename = "spatial/figures/br_outline.png", device = NULL,
+       path = NULL, scale = 1, width = 6.86, height = 6, units = "in", dpi = 600, bg = "transparent")
 
 # read all states
-states <- read_state(year = 2017, showProgress = TRUE)
+states <- read_state(year = 2020, showProgress = TRUE)
 
 # Create a new variable in your 'states' dataset specifying the fill color
 states$fill_color <- "grey"  # Set the default color for all states
@@ -21,10 +41,10 @@ states$fill_color[states$abbrev_state == "MS"] <- "white"  # Change color for th
 # #state of Mato Grosso du Sul
 # MS_state_micro <- read_micro_region(code_micro= "MS", year = 2017, simplified = FALSE, showProgress = TRUE)
 
-# Remove plot axis
-no_axis <- theme(axis.title=element_blank(),
-                 axis.text=element_blank(),
-                 axis.ticks=element_blank())
+
+
+
+
 
 plot_BR <-
   ggplot() +
@@ -100,7 +120,7 @@ BR_meso_region <- read_meso_region(code_meso = "all", year = 2017, simplified = 
 ggplot() +
   geom_sf(data = south_america, fill = "darkgrey") +
   geom_sf(data = BR_meso_region, fill="white", color="black", size=.15, show.legend = FALSE) +
-  geom_sf(data = gps_sf, color = "red", size = 1) +
+  # geom_sf(data = gps_sf, color = "red", size = 1) +
   theme_bw() +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank())
