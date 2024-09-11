@@ -106,6 +106,25 @@ oceanic_eighties <- fs::path_temp("Oceanic-Eighties", ext = "rstheme")
 download.file("https://git.io/rstudio-theme-oceanic-eighties", oceanic_eighties)
 rstudioapi::addTheme(oceanic_eighties, apply = TRUE)
 
+
+
+
+
+
+#......................................................
+
+
+# Apply the theme
+rstudioapi::applyTheme("path/to/my-light-theme.rstheme")
+
+
+
+
+
+
+
+
+
 #............................................................
 
 # Modifications of Selectors
@@ -128,16 +147,26 @@ rstudioapi::addTheme(oceanic_eighties, apply = TRUE)
 # Colour samples
 #Blue       
 "#007faa"
+"#2b8cbe"
+"#3182bd"
 "#0077BB"
 "#88ccee"
-"#364B9A"
 "#77AADD"
 "#5385BC"
 "#2166AC"
+"#364B9A"
 "#004488"
+"#ADD8E6"
+"#99CCFF"
 
-#Yellow
+"#87CEEB"
+
+"#CC99FF"
+"#9966FF"
+"#9370DB"
+
 "#eecc66"
+"#FFFF66"
 
 
 "#f0f0f0"
