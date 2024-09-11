@@ -3,22 +3,13 @@
 #put a solid black line, you can change the "#px" to change the size eg. 5px for R Markdown
 <div style="border-bottom: 3px solid black;"></div>
 
-#_________________________________________________________________________
-# How to import files ----
-
-# Import all home-range PMF rasters in a folder
-folder_path <- "data/home_range/UD"
-hr_pmf_list <- list.files(folder_path, pattern = "\\.tif$", full.names = TRUE)
-
-# Import all the raster files into a list
-pmf_rasters <- lapply(hr_pmf_list, rast)
-
-# Extract file names without extension and assign names to the raster list
-names(pmf_rasters) <- gsub("\\.tif$", "", basename(hr_pmf_list))
 
 
 #_________________________________________________________________________
 # Data wrangling ----
+
+#convert list into a dataframe
+mw.dat <- do.call(rbind, lapply(RESULTS, as.data.frame))
 
 #subset or drop data based on conditions
 goat_data <- goat_data[!(goat_data$date <= "2019-06-23"),]
@@ -31,17 +22,50 @@ hr.shp <- combined_sf[grepl("95% est", combined_sf$name), ]
 
 rownames()
 df$column <- rownames(df) #extract rownames into column
-
+colnames(mw.dat)[2] <- 'timestamp' #rename column, simplied
+colnames(mw.dat)[colnames(mw.dat) == 'Time'] <- 'timestamp' ##rename column, more explicit
 
 library(stringr)
 str_detect() # select objects that contains certain text
 hr95.shp = hr.shp[str_detect(hr.shp$name, "est"),]
 
 
+#...................................................................
+# Temporal attributes
+library(lubridate)
+
+#check timezone
+attr(df$timestamp[1], "tzone")
+
+# format time from HHMM into to HH:MM:SS
+df$time <- format(strptime(df$time, format = "%H%M"), format = "%H:%M:%S")
+# combine date and time into timestamp
+df$timestamp <- ymd_hms(paste(df$date, df$time))
+# Combine date and time columns into a single POSIXct timestamp
+df$timestamp <- as.POSIXct(paste(df$date, df$time), format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
+# convert timezone
+df$timestamp <- with_tz(df$timestamp, tzone = "America/Los_Angeles")
+time_window <- hours(1)  # Using lubridate, note this comes out as a 'period' object
+
+
+
+
+# for loops
+# Combine the results into a data frame 
+df <- data.frame(matrix(unlist(results), ncol=length(results), byrow=TRUE))
+
+
+
+
+
 
 
 
 # How to extract text ----
+
+#extract filename from filepath
+id_full <- "NOAA/GOES/18/FDCF/2023233000020400000"
+id_portion <- basename(id_full)
 
 #extract text before the first _ underscore (i.e. season)
 dat.hr$season <- sub("^(.*?)_.*", "\\1", dat.hr$individual.local.identifier)
@@ -86,3 +110,6 @@ newd <- expand_grid(
   Time = seq(0, 21, length.out = 400),
   Diet = unique(ChickWeight$Diet), # since we are using fixed effects
   Chick = 'new chick') # since we are using random effects
+
+
+dt = 1 %#% 'day' # '%#%' This converts it into days (si units), you can replace day with another unit
