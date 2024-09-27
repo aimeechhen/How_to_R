@@ -2,3 +2,24 @@
 .Rhistory
 .RData
 .Ruserdata
+
+BIOL-310-LAB-2-question-11-17--Markdown-_files
+intro
+incomplete, misc
+
+data_cleaning/data_cleaning_resources
+
+how to code/How to do loops_conditions (UBCV)
+how to code/spatial/nasa datadownload setup
+how to code/spatial/noaa_resources
+
+rmarkdown/
+
+data/spatial/CWFIS_Datamart
+data/spatial/gov_bc_fire
+data/spatial/modis_nrt
+data/spatial/nasa_fire
+data/spatial/noaa_goes18
+data/spatial/noaa_ndvi
+data/spatial/shapefiles/Provincial_Parks_BC_Albers
+
