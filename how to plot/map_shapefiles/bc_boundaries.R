@@ -43,5 +43,6 @@ ext(bc_shape_sf)
 bc_ext <- ext(bc_shape_sf)
 
 
+library(geodata)
 bc <- gadm(country = "Canada", level = 1, path = tempdir())
 bc <- bc[bc$NAME_1 == "British Columbia", ]

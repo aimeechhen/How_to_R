@@ -79,8 +79,10 @@ scale_shape_manual(values = c(16, 17))      #manually assign shape
 scale_alpha_manual(values = c(0.8,0.6))     #manually adjust colour transparency of the object
 scale_fill_manual(values = c("#228833", "#de2d26", "#feb24c"), 
                   breaks = c('before', 'during', 'after'))
-scale_colour_manual(values = c("#228833", "#de2d26", "#feb24c"), 
+scale_color_manual(values = c("#228833", "#de2d26", "#feb24c"), 
                     breaks = c('before', 'during', 'after'))
+
+scale_color_manual(name = "Date", values = rainbow(length(unique(fire_data$date)))) +
 
 # use a blind color friendly palette
 library(khroma)
@@ -113,12 +115,13 @@ theme(
   axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), # vertical labels
   axis.ticks = element_blank(),
   
-  legend.position="none", #removes legend
-  legend.position = c(0.5, 1.05), #manually set legend center and above plot (horizontal, vertical)
-  legend.position = c(0.8, 0.9), #manually set position (horizontal, vertical)
+  # legend
   legend.position = "top",
   legend.direction = "horizontal",
   legend.justification = "center",
+  legend.position="none", #removes legend
+  legend.position = c(0.5, 1.05), #manually set legend center and above plot (horizontal, vertical)
+  legend.position = c(0.8, 0.9), #manually set position (horizontal, vertical)
   legend.title = element_blank(), 
   legend.text = element_text(size=6, family = "sans", face = "bold"),
   legend.key.height = unit(0.3, "cm"),
