@@ -34,8 +34,15 @@ geom_bar(stat = "identity", position = "stack", fill = "red")
 geom_hline(yintercept = 1, col = "grey70", linetype = "dashed") # add a horizontal line
 geom_vline(xintercept = as.Date('2020-03-31'), color = "black", linewidth = 1, linetype = 2) + # start of covid
   
-  geom_sf(data= cathedral, fill = NA, size = 1.5) +
-  geom_sf(data = goes, color = "purple", fill = NA, size = 1.5) +
+geom_sf(data= cathedral, fill = NA, size = 1.5) +
+geom_sf(data = goes, color = "purple", fill = NA, size = 1.5) +
+  
+  
+  # labels, titles
+  ggtitle("A)") + 
+  labs(tag = "x") + # tag = "x", used with ggtitle() to have additional labels
+  
+  
   
   #__________________________________________________________________________
   # ggplot scale ----
@@ -107,7 +114,7 @@ theme(
   panel.grid.major = element_blank(), #removes horizontal gridlines
   panel.grid.minor = element_blank(), #removes vertical gridlines
   
-  plot.title = element_text(hjust = 0.5, size = 14, family = "sans", face = "bold"), #center title
+
   axis.title.y = element_text(size=10, family = "sans", face = "bold"),
   axis.title.x = element_text(size=10, family = "sans", face = "bold"),
   axis.text.y = element_text(size=8, family = "sans"),
@@ -131,9 +138,13 @@ theme(
   panel.background = element_rect(fill = "transparent"),
   panel.border = element_blank(), #plot boundary
   
+  plot.title = element_text(hjust = 0.5, size = 14, family = "sans", face = "bold"), #center title
+  plot.title = element_text(size = 12, family = "sans", face = "bold"),
+  plot.tag = element_text(size = 16, family = "sans", face = "bold"), # used with labs(tag = "x")
+  plot.tag.position = c(-0.12, 0.5), # horizontal, vertical
   plot.background = element_rect(fill = "transparent", color = NA),
   plot.margin = unit(c(0.2,0.1,0.2,0.2), "cm"), #top, right, bot, left
-  plot.margin = unit(c(0.75,0.5,0.25,0.25), "in"),
+  plot.margin = unit(c(0.75,0.5,0.25,0.25), "in"), #top, right, bot, left
   
 )
 
