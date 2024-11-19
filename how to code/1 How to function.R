@@ -135,3 +135,11 @@ newd <- expand_grid(
 
 
 dt = 1 %#% 'day' # '%#%' This converts it into days (si units), you can replace day with another unit
+
+
+
+
+# check data type of covariates
+datatype(elev) #FLT4S: 32-bit float (single precision) .-. numerical
+#inspect values and check range of value
+range(values(elev), na.rm = TRUE)

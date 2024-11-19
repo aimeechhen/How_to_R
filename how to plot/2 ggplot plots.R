@@ -47,10 +47,19 @@ geom_sf(data = goes, color = "purple", fill = NA, size = 1.5) +
   #__________________________________________________________________________
   # ggplot scale ----
 
+# date label codes
+# month as MMM = %b
+
+# set your axis range
+limits = c(x,x) # c(to,from)
+#set your axis alues breaks
+breaks = seq(x,x, by = x) #seq(to,from,by=value you want the axis to be in sequenced in)
+
+
 # change to 365 days on the x axis so its a full year
 scale_x_continuous(limits = c(-2, 340), expand = c(0, 1), # so the plot extends a bit after december
                    breaks = c(0, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335), # Approximate month starts
-                   breaks = seq(0, 365, by = 30),
+                   breaks = seq(0, 365, by = 30), 
                    labels = c(month.abb, ""))  # Use month abbreviations
 #to account for an extra month use c(month.abb, ""), if not, then use labels =  month.abb
 scale_x_continuous(limits = c(0,1), expand = c(0,0.02))
@@ -76,7 +85,7 @@ scale_y_log10(expand = c(0,0.1))
 
 scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
              date_labels = "%b")
-
+scale_x_date(date_breaks = "1 month", date_labels = "%m-%y") +
 
 
 
@@ -94,6 +103,7 @@ scale_color_manual(name = "Date", values = rainbow(length(unique(fire_data$date)
 # use a blind color friendly palette
 library(khroma)
 khroma::scale_color_muted()
+khroma::scale_color_bright()
 khroma::scale_fill_muted()
 scale_color_muted(name = "National Parks", labels = c("Glacier","Kootenay","Revelstoke","Pacific Rim","Yoho"))
 
@@ -137,6 +147,8 @@ theme(
   
   panel.background = element_rect(fill = "transparent"),
   panel.border = element_blank(), #plot boundary
+  aspect.ratio = 1, # sets the ratio of height and width of the panel to be the same
+  aspect.ratio = 2,  #  height 2x the width
   
   plot.title = element_text(hjust = 0.5, size = 14, family = "sans", face = "bold"), #center title
   plot.title = element_text(size = 12, family = "sans", face = "bold"),
@@ -146,6 +158,7 @@ theme(
   plot.margin = unit(c(0.2,0.1,0.2,0.2), "cm"), #top, right, bot, left
   plot.margin = unit(c(0.75,0.5,0.25,0.25), "in"), #top, right, bot, left
   
+
 )
 
 
