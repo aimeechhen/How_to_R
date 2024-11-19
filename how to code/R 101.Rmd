@@ -1,0 +1,208 @@
+---
+title: "R 101"
+output: html_document
+date: "2022-12-26"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Common Packages
+Base R
+
+```{r}
+
+# Coding and data wrangling
+library('tidyverse')
+
+library('stringr')
+
+# Visualisation
+library('ggplot2')
+
+# Spatial carpentry
+```
+
+
+
+
+# Intro to R language
+object
+vector
+element
+argument
+operator
+factor
+strings
+
+'=' means assign, similar to <- when assigning function to object, when inside (), use '=' instead of <-
+'==' means equal to
+'!' means 'not'
+'[]' to extract elements from a vector (extracting is also known as indexing or sub-scripting), this is a positional index
+'[[]]' similar to [], [[]] can also access data in data frames
+'.' 
+','
+'*'
+'$'
+
+# Object information
+```{r}
+class()
+head()
+names()
+str()
+unique()
+```
+
+Check object types:
+
+```{r}
+is.character()
+is.numeric()
+is.logical()
+is.factor()
+is.complex()
+```
+
+
+
+
+
+
+## Data types
+numeric
+integers
+logical
+character
+```{r}
+
+```
+
+## Variable types
+categorical
+double
+class
+character (char)
+
+# Basic Commands
+```{r}
+c() # combine function
+seq()
+rep() # replicate (repeat) values of a specified number of times
+```
+
+
+# Data frame information
+```{r}
+str() # summary of data frame object structure
+dim() # dimensions of data frame object
+names()
+head()
+read.table()
+summary()
+ls()
+```
+
+# Create a data frame
+Manipulating data is known as 'data wrangling'
+```{r}
+data.frame()
+```
+
+
+# Setting bounds or a range
+'from = '
+'to = '
+'by = '
+':' regular sequence of values ie. from:to
+
+
+```{r}
+row.names()
+  # 'row.names = NULL' will force row numbering
+col.names()
+order()
+```
+
+# Arguments
+```{r}
+na.strings =
+col_names = TRUE/FALSE
+```
+
+# Basic statistical commands
+```{r}
+mean()
+var()
+sd()
+length()
+```
+
+
+
+# Save
+```{r}
+save(objectname, file = "filename.RData")
+save.image(file = "filename.RData")
+saveRDS(object = objectname, file = "filename.RDS")
+```
+
+# Load
+```{r}
+read_csv() # for .csv excel files
+readRDS() # for .RDS files
+load() # for .RData files
+```
+
+# Plot
+Using plot()
+```{r}
+COL.1 <- c("blue", "light blue", "red", "red", "blue", "red", "blue", "light blue", "light blue", "red",
+           "red", "blue")
+png(file = "Overlap.png", width = 6.86, height = 6, units = "in", res = 600)
+plot(AKDE.1, col.DF = COL.1, col.level = COL.1, col.grid = NA, level = NA)
+title("Overlap aKDE (Site 1)")
+dev.off()
+```
+
+Using ggplot()
+```{r}
+ggplotobject <- ggplot()
+ggsave(ggplotobject,
+       width = 3.23, height = 2, units = "in",
+       dpi = 600,
+       bg = "transparent",
+       file="filename.png")
+```
+
+
+
+
+
+
+
+
+
+
+
