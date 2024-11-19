@@ -70,6 +70,26 @@ m <- setView(m, lng=-53.73, lat=-21.14, zoom = 12)
 m <- addTiles(m)
 m
 
+m <- leaflet(collar_data) %>% # if you have a lot of data points this will take a while
+  addTiles() %>% 
+  addMarkers()
+m
+
+leaflet() %>%
+  addTiles() %>%
+  setView(lng = -120.17, lat = 49.05, zoom = 12) %>%
+  addProviderTiles(providers$Esri.WorldImagery) %>%
+  addPolylines(data = cathedral, color = "red",  
+               # dashArray = "9,9",  # dashed outline
+               stroke = 1, opacity = 0.5) %>%
+  addMiniMap(width = 150, height = 150)
+
+
+# save as a static plot
+library(mapview)
+webshot::install_phantomjs()
+mapshot(m, file = "figures/leaflet_map.png")
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #............................................................

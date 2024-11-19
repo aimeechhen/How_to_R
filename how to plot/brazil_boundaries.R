@@ -85,7 +85,11 @@ ggsave(plot_BR_MS,
        file="figures/map/plot_BR_MS.png")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~
-#MAPBIOMAS
+#MAPBIOMAS ----
+# https://brasil.mapbiomas.org/en/
+# https://brasil.mapbiomas.org/en/colecoes-mapbiomas/
+# https://github.com/mapbiomas-brazil/user-toolkit
+
 library(sf)
 map_states <- read_sf("data/map/dashboard_states-static-layer.shp")
 
