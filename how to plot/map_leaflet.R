@@ -1,59 +1,5 @@
 
-#............................................................
-# Load packages ----
-#............................................................
 
-#data, visualization
-library(readr)
-library(ggplot2)
-library(khroma)          #colour blind friendly colour palette
-library(dplyr)           #data wrangling
-library(tidyr)           #data wrangling
-library(tibble)          #data wrangling
-library(lubridate)       #round_date() for corrMove
-library(geobr)           #shape files for Brazil
-library(gridExtra)       #arrangement of plots for multi-panel figures
-library(scales)          #scaling axis in plots
-library(sf)
-#analysis
-library(devtools)
-#devtools::install_github("ctmm-initiative/ctmm", force = TRUE) #if package needs to be updated
-#devtools::install_github("jmcalabrese/corrMove", force = TRUE) #if installing for the first time
-library(ctmm)            #continuous-time movement models
-library(lme4)            #pairwise sex test to see if differences are significant using glmer()
-library(glmmTMB)         #beta distribution
-library(mgcv)            #gam() for encounters
-library(corrMove)        #correlative movement
-
-#............................................................
-# Data ----
-#............................................................
-
-# Set working directory
-setwd("C:/Users/achhen/Documents/GitHub/Giant_Anteater")
-
-#import data, cleaned GPS giant anteater data
-DATA_GPS <- readRDS("RDS/DATA_GPS.RDS")
-DATA_TELEMETRY <- readRDS("RDS/DATA_TELEMETRY.RDS")
-DATA_META <- readRDS("RDS/DATA_META.RDS")
-DATA_BIO <- readRDS("RDS/DATA_BIO.RDS")
-
-#add site location
-DATA_GPS$site <- NA
-DATA_GPS$site[DATA_GPS$ID %in% c("Alexander", "Anthony", "Bumpus", "Cate", "Christoffer",
-                                 "Elaine", "Jackson", "Kyle", "Little_Rick", "Makao",
-                                 "Puji", "Rodolfo")] <- 1
-DATA_GPS$site[DATA_GPS$ID %in% c("Annie", "Beto", "Hannah", "Jane", "Larry",
-                                 "Luigi", "Margaret", "Maria", "Reid", "Sheron",
-                                 "Thomas")] <- 2
-
-#subset site 1 GPS data and create a new dataframe 
-GPS_site1 <- DATA_GPS[DATA_GPS$site == 1,]
-GPS_site1 <- left_join(GPS_site1, DATA_BIO, by = "ID")
-# Convert dataframe into an sf object
-gps_sf1 <- st_as_sf(GPS_site1, coords = c("GPS.Longitude", "GPS.Latitude"), crs = 4326)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 library(leaflet)
 
 #Basemap using map tiles (OpenStreetMap tiles used by default)
@@ -92,9 +38,98 @@ mapshot(m, file = "figures/leaflet_map.png")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+library(leaflet)
+library(sf)
+
+
+# import data points
+df <- read.csv("data.csv")
+
+m <- leaflet(df)
+m <- addTiles(m)
+m <- addMarkers(m, ~Long, ~Lat)
+m
+
+m <- leaflet(df)
+m <- addTiles(m)
+m <- addCircleMarkers(m, ~Long, ~Lat)
+m
+
+
+m <- leaflet(gps_data) %>% # if you have a lot of data points this will take a while
+  addTiles() %>% 
+  addMarkers()
+m
+
+leaflet() %>%
+  addTiles() %>%
+  setView(lng = -120.17, lat = 49.05, zoom = 12) %>%
+  addProviderTiles(providers$Esri.WorldImagery) %>%
+  addPolylines(data = cathedral, color = "red",  
+               # dashArray = "9,9",  # dashed outline
+               stroke = 1, opacity = 0.5) %>%
+  addMiniMap(width = 150, height = 150)
+
+
+
+
+
+# save as a static plot
+library(mapview)
+webshot::install_phantomjs()
+mapshot(m, file = "figures/leaflet_map.png")
+
+
+# get shapefile of bc for example
+library(geodata)
+bc <- gadm(country = "Canada", level = 1, path = tempdir())
+bc <- bc[bc$NAME_1 == "British Columbia", ]
+bc
+
+
+# plot it with bc shapefile
+leaflet() %>%
+  addTiles() %>%
+  setView(lng=-120, lat=50, zoom = 12) %>% # center the map at this coordinate
+  addPolygons(data = bc, color = "blue", fill = FALSE, weight = 2) %>%  # shapefile outline
+  addMarkers(data = df, lng = ~Long, lat = ~Lat) # data points
+# addCircleMarkers(m, ~Long, ~Lat)
+
+
+
+
+
+
+
 #............................................................
-# Rasters
+# leaflet + gps + rasters ----
 #............................................................
+
+
+# Set working directory
+setwd("C:/Users/achhen/Documents/GitHub/Giant_Anteater")
+
+#import data, cleaned GPS giant anteater data
+DATA_GPS <- readRDS("RDS/DATA_GPS.RDS")
+DATA_TELEMETRY <- readRDS("RDS/DATA_TELEMETRY.RDS")
+DATA_META <- readRDS("RDS/DATA_META.RDS")
+DATA_BIO <- readRDS("RDS/DATA_BIO.RDS")
+
+#add site location
+DATA_GPS$site <- NA
+DATA_GPS$site[DATA_GPS$ID %in% c("Alexander", "Anthony", "Bumpus", "Cate", "Christoffer",
+                                 "Elaine", "Jackson", "Kyle", "Little_Rick", "Makao",
+                                 "Puji", "Rodolfo")] <- 1
+DATA_GPS$site[DATA_GPS$ID %in% c("Annie", "Beto", "Hannah", "Jane", "Larry",
+                                 "Luigi", "Margaret", "Maria", "Reid", "Sheron",
+                                 "Thomas")] <- 2
+
+#subset site 1 GPS data and create a new dataframe 
+GPS_site1 <- DATA_GPS[DATA_GPS$site == 1,]
+GPS_site1 <- left_join(GPS_site1, DATA_BIO, by = "ID")
+# Convert dataframe into an sf object
+gps_sf1 <- st_as_sf(GPS_site1, coords = c("GPS.Longitude", "GPS.Latitude"), crs = 4326)
+
 
 library(terra)
 
@@ -205,7 +240,7 @@ m
 m <- leaflet() %>%
   #Set the view of the map (center and zoom level)
   setView(lng=-53.73, lat=-21.14, zoom = 14) %>%
-    # Add default OpenStreetMap map tiles
+  # Add default OpenStreetMap map tiles
   addTiles() %>%
   #add 1st raster layer, pasture
   addRasterImage(pasture_crop, 
@@ -225,11 +260,11 @@ m <- leaflet() %>%
                  opacity = 0.3) %>%
   addLegend(pal = planted_forest_col, values = values(planted_forest),
             title = "Planted Forest") %>%
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-#gps tracking data for site 1
-plot_site1 <- 
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
+  #gps tracking data for site 1
+  plot_site1 <- 
   ggplot() +
   geom_sf(data = gps_sf1, aes(color = Sex),
           size = 1) +
@@ -256,3 +291,7 @@ m %>%   #add ggplot to leaflet basemap
         panel.grid.minor = element_blank()) +
   coord_sf(xlim = c(-53.67, -53.8), #lat
            ylim = c(-21.2, -21.08)) #long
+
+
+
+
