@@ -33,9 +33,10 @@
 # bc fire
 # https://catalogue.data.gov.bc.ca/dataset/bc-wildfire-fire-perimeters-current
 # https://catalogue.data.gov.bc.ca/dataset/bc-wildfire-fire-perimeters-historical
+# map of bc wildfire services and regional boundaries
 # https://www.for.gov.bc.ca/ftp/HPR/external/!publish/Maps_and_Data/Maps/Organizational_Overview/
 
-
+# click on "Download KML Ground Overlay file" to get object name, and inspect data details
 
 
 #............................................................
@@ -50,31 +51,14 @@ WHSE_LAND_AND_NATURAL_RESOURCE.PROT_HISTORICAL_INCIDENTS_SP <- bcdc_query_geodat
 
 bcdc_get_citation("https://catalogue.data.gov.bc.ca/dataset/bc-wildfire-fire-incident-locations-historical/resource/6db589c4-e45e-4ae9-a7b5-775cbfec6037")
 
-#...........................................................
-# Severity ----
-
-# historical
-# WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SP <- bcdc_query_geodata("WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SP") %>% 
-#   collect()
-# # years are only for 2018-2021 :(
-# test <- WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SP[WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SP$FIRE_NUMBER == "K52125",]
-# test <- WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SP[WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SP$FIRE_YEAR == "2023",]
-
-# same year
-WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SAME_YR_SP <- bcdc_query_geodata("WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SAME_YR_SP") %>% 
-  filter(FIRE_NUMBER == "K52125") %>% 
-  collect()
-
-bcdc_get_citation("https://catalogue.data.gov.bc.ca/dataset/fire-burn-severity-same-year")
-# or "https://catalogue.data.gov.bc.ca/dataset/fire-burn-severity-same-year/resource/1ff6244d-cea0-4d66-a246-f523aa2efa91"
-
 
 #...........................................................
-# Polygons ----
+# perimeter area (polygons of the fire) ----
 
 #polygon
 WHSE_LAND_AND_NATURAL_RESOURCE.PROT_HISTORICAL_FIRE_POLYS_SP <- bcdc_query_geodata("WHSE_LAND_AND_NATURAL_RESOURCE.PROT_HISTORICAL_FIRE_POLYS_SP") %>% 
-  filter(FIRE_NUMBER == "K52125") %>% 
+  # filter(FIRE_NUMBER == "K52125") %>% 
+  filter(FIRE_YEAR == "2023") %>% 
   collect()
 
 
@@ -85,6 +69,29 @@ WHSE_LAND_AND_NATURAL_RESOURCE.PROT_HISTORICAL_FIRE_POLYS_SP <- st_transform(WHS
 bcdc_get_citation("https://catalogue.data.gov.bc.ca/dataset/bc-wildfire-fire-perimeters-historical/resource/c899578d-0738-4166-9b65-0588464f42ee")
 # or ID "22c7cb44-1463-48f7-8e47-88857f207702"
 
+
+
+
+
+
+
+#...........................................................
+# Severity ----
+
+# historical
+# WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SP <- bcdc_query_geodata("WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SP") %>% 
+#   collect()
+# # historical are only for 2018-2021, need to refer to current/same year data for more recent
+# test <- WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SP[WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SP$FIRE_NUMBER == "K52125",]
+# test <- WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SP[WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SP$FIRE_YEAR == "2023",]
+
+# same year
+WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SAME_YR_SP <- bcdc_query_geodata("WHSE_FOREST_VEGETATION.VEG_BURN_SEVERITY_SAME_YR_SP") %>% 
+  filter(FIRE_NUMBER == "K52125") %>% 
+  collect()
+
+bcdc_get_citation("https://catalogue.data.gov.bc.ca/dataset/fire-burn-severity-same-year")
+# or "https://catalogue.data.gov.bc.ca/dataset/fire-burn-severity-same-year/resource/1ff6244d-cea0-4d66-a246-f523aa2efa91"
 
 
 #...........................................................
