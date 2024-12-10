@@ -5,95 +5,53 @@ library(leaflet)
 #Basemap using map tiles (OpenStreetMap tiles used by default)
 #https://rstudio.github.io/leaflet/basemaps.html
 
-m <- leaflet()
-m <- addTiles(m)
-m <- addMarkers(m, lng=-53.73, lat=-21.14, popup="Site 1")
-m
-
-
-m <- leaflet()
-m <- setView(m, lng=-53.73, lat=-21.14, zoom = 12)
-m <- addTiles(m)
-m
-
-m <- leaflet(collar_data) %>% # if you have a lot of data points this will take a while
-  addTiles() %>% 
-  addMarkers()
-m
-
-leaflet() %>%
-  addTiles() %>%
-  setView(lng = -120.17, lat = 49.05, zoom = 12) %>%
-  addProviderTiles(providers$Esri.WorldImagery) %>%
-  addPolylines(data = cathedral, color = "red",  
-               # dashArray = "9,9",  # dashed outline
-               stroke = 1, opacity = 0.5) %>%
-  addMiniMap(width = 150, height = 150)
-
-
-# save as a static plot
-library(mapview)
-webshot::install_phantomjs()
-mapshot(m, file = "figures/leaflet_map.png")
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-library(leaflet)
 library(sf)
 
 
 # import data points
 df <- read.csv("data.csv")
 
-m <- leaflet(df)
-m <- addTiles(m)
-m <- addMarkers(m, ~Long, ~Lat)
-m
-
-m <- leaflet(df)
-m <- addTiles(m)
-m <- addCircleMarkers(m, ~Long, ~Lat)
-m
-
-
-m <- leaflet(gps_data) %>% # if you have a lot of data points this will take a while
+m <- leaflet(df) %>% # if you have a lot of data points this will take a while
   addTiles() %>% 
-  addMarkers()
-m
+  addMarkers() %>% 
+  addCircleMarkers()
 
+
+# just map, no data to add, with shapefile
 leaflet() %>%
   addTiles() %>%
   setView(lng = -120.17, lat = 49.05, zoom = 12) %>%
   addProviderTiles(providers$Esri.WorldImagery) %>%
-  addPolylines(data = cathedral, color = "red",  
+  addPolylines(data = cathedral, color = "red",  # for outline, for fill use addPolygons()
                # dashArray = "9,9",  # dashed outline
                stroke = 1, opacity = 0.5) %>%
   addMiniMap(width = 150, height = 150)
 
 
 
-
-
+#...................................
 # save as a static plot
+# ...................................
 library(mapview)
 webshot::install_phantomjs()
 mapshot(m, file = "figures/leaflet_map.png")
 
 
-# get shapefile of bc for example
+
+#...................................
+# include shapefile of bc ----
 library(geodata)
 bc <- gadm(country = "Canada", level = 1, path = tempdir())
 bc <- bc[bc$NAME_1 == "British Columbia", ]
 bc
 
 
-# plot it with bc shapefile
+# with bc shapefile
 leaflet() %>%
   addTiles() %>%
   setView(lng=-120, lat=50, zoom = 12) %>% # center the map at this coordinate
-  addPolygons(data = bc, color = "blue", fill = FALSE, weight = 2) %>%  # shapefile outline
-  addMarkers(data = df, lng = ~Long, lat = ~Lat) # data points
-# addCircleMarkers(m, ~Long, ~Lat)
+  addPolygons(data = bc, color = "blue", fill = FALSE, weight = 2) # shapefile outline
+
 
 
 
