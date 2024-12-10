@@ -48,6 +48,18 @@ china_projected <- project(china, epsg_53018)
 
 
 
+#........................................
+# other projection systems ----
+
+# NAD 1983 UTM Zone 10N
+"EPSG:26910"
+
+
+
+
+
+
+
 #...........................................................
 # NOAA GOES satellite crs (Maybe, need to double check, place holder for now)
 goes_crs <- "PROJCRS[\"Geostationary_Satellite\", 
