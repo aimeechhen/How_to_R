@@ -5,8 +5,14 @@
 
 
 
+excel_sheets(file) # list all the sheet names in the excel file
+  
+
 #_________________________________________________________________________
 # Data wrangling ----
+
+#Split the column into multiple rows
+df_expanded <- separate_rows(df, your_column, sep = ",")
 
 #convert list into a dataframe
 mw.dat <- do.call(rbind, lapply(RESULTS, as.data.frame))
@@ -19,6 +25,7 @@ goat_data <- left_join(goat_data, filter(goat_info, goat_id != "CA03"), by = "co
 
 grepl() # select objects that contains certain text
 hr.shp <- combined_sf[grepl("95% est", combined_sf$name), ]
+strictosidine <- dat[grepl("strictosidine", dat$ann_cro_2, ignore.case = TRUE), ]
 
 rownames()
 df$column <- rownames(df) #extract rownames into column
@@ -28,6 +35,35 @@ colnames(mw.dat)[colnames(mw.dat) == 'Time'] <- 'timestamp' ##rename column, mor
 library(stringr)
 str_detect() # select objects that contains certain text
 hr95.shp = hr.shp[str_detect(hr.shp$name, "est"),]
+
+
+
+# For Reo
+# i want to take values from other columns (i.e X.1, X.2) and move them into Ret.time and AuC column while keeping the same tissue type
+# then repeat this for every row
+
+# Create a new empty data frame
+new_dat <- data.frame(Tissue = character(), 
+                      Ret.time = numeric(), 
+                      AuC = numeric(), 
+                      stringsAsFactors = FALSE)
+# Loop through all rows in dat
+for (i in 1:nrow(dat)) {
+  # Add first row
+  new_dat <- rbind(new_dat, data.frame(Tissue = dat$Tissue[i], 
+                                       Ret.time = dat$Ret.time[i], 
+                                       AuC = dat$AuC[i]))
+    # Add rows for X.1 and X.2 and extract those values into a new dataframe and bind it
+  new_dat <- rbind(new_dat, data.frame(Tissue = dat$Tissue[i], 
+                                       Ret.time = ifelse(!is.na(dat$X.1[i]), dat$X.1[i], NA), 
+                                       AuC = ifelse(!is.na(dat$X.2[i]), dat$X.2[i], NA)))
+    # Add rows for X.4 and X.5 and extract those values into a new dataframe and bind it
+  new_dat <- rbind(new_dat, data.frame(Tissue = dat$Tissue[i], 
+                                       Ret.time = ifelse(!is.na(dat$X.4[i]), dat$X.4[i], NA), 
+                                       AuC = ifelse(!is.na(dat$X.5[i]), dat$X.5[i], NA)))
+}
+
+
 
 
 #...................................................................
