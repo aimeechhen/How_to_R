@@ -49,6 +49,7 @@ bc
 # with bc shapefile
 leaflet() %>%
   addTiles() %>%
+  addProviderTiles(providers$Esri.WorldImagery) %>%
   setView(lng=-120, lat=50, zoom = 12) %>% # center the map at this coordinate
   addPolygons(data = bc, color = "blue", fill = FALSE, weight = 2) # shapefile outline
 

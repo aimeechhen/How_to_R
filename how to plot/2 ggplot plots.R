@@ -107,14 +107,13 @@ khroma::scale_color_bright()
 khroma::scale_fill_muted()
 scale_color_muted(name = "National Parks", labels = c("Glacier","Kootenay","Revelstoke","Pacific Rim","Yoho"))
 
+scale_fill_viridis()
+
+
 #__________________________________________________________________________
 # ggplot themes ----
 
 element_blank() #to remove
-
-# change the panel background colour and transparency
-panel.background = element_rect(scales::alpha("#005f73", 0.6))
-
 
 theme_minimal()
 theme_classic() #does not include gridlines by default
@@ -145,6 +144,8 @@ theme(
   legend.key=element_blank(),
   legend.background = element_rect(fill = "transparent"),
   
+  # change the panel background colour and transparency
+  panel.background = element_rect(scales::alpha("#005f73", 0.6)),
   panel.background = element_rect(fill = "transparent"),
   panel.border = element_blank(), #plot boundary
   aspect.ratio = 1, # sets the ratio of height and width of the panel to be the same

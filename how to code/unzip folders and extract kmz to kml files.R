@@ -12,7 +12,7 @@ directory <- "data/helicopter/flight_data/2021_Track/"
 kmz_file <- "data/helicopter/flight_data/2021_Track/AS JUN 21-1.kmz"
 
 # Extract/unzip the .kmz file
-extracted_file <- unzip(kmz_file, exdir = paste0(directory, "extracted_kmz")
+extracted_file <- unzip(kmz_file, exdir = paste0(directory, "extracted_kmz"))
 
 # Rename the extracted file to match the original file name that is in the extracted directory
 
