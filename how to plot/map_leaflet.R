@@ -2,8 +2,12 @@
 
 library(leaflet)
 
+library(leaflet.extras)
+
 #Basemap using map tiles (OpenStreetMap tiles used by default)
 #https://rstudio.github.io/leaflet/basemaps.html
+# https://leafletjs.com/
+# https://www.geeksforgeeks.org/leaflet-package-in-r/
 
 library(sf)
 
@@ -11,21 +15,137 @@ library(sf)
 # import data points
 df <- read.csv("data.csv")
 
-m <- leaflet(df) %>% # if you have a lot of data points this will take a while
-  addTiles() %>% 
-  addMarkers() %>% 
-  addCircleMarkers()
+# https://bookdown.org/nicohahn/making_maps_with_r5/docs/leaflet.html
 
 
-# just map, no data to add, with shapefile
-leaflet() %>%
+# basic map
+map <- leaflet() %>%
+  addTiles()
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~
+# create a basemap with leaflet() and add different provider tiles and a layers control so that users can switch between the different tiles
+# add different provider tiles
+basemap <- 
+  leaflet() %>%
+  addProviderTiles("OpenStreetMap", group = "OpenStreetMap") %>%
+  addProviderTiles("Esri.WorldStreetMap", group = "Esri.WorldStreetMap") %>%
+  addProviderTiles("Esri.WorldTopoMap", group = "Esri.WorldTopoMap") %>%
+  addProviderTiles("Esri.WorldImagery", group = "Esri.WorldImagery") %>%
+  addProviderTiles("Esri.WorldTerrain", group = "Esri.WorldTerrain") %>% # doesnt include canada
+  addProviderTiles("Esri.OceanBasemap", group = "Esri.OceanBasemap") %>%
+  addProviderTiles("Esri.NatGeoWorldMap", group = "Esri.NatGeoWorldMap") %>%
+  addProviderTiles("CartoDB.Positron", group = "CartoDB.Positron") %>%
+  addProviderTiles("CartoDB.DarkMatter", group = "CartoDB.DarkMatter") %>%
+  addProviderTiles("USGS.USTopo", group = "USGS.USTopo") %>% # labels not as detailed for canada
+  addProviderTiles("USGS.USImagery", group = "USGS.USImagery") %>% # no canada
+  addProviderTiles("USGS.USImageryTopo", group = "USGS.USImageryTopo") %>% #
+  # add a layers control (ability to click through different map types)
+  addLayersControl(baseGroups = c(
+    "OpenStreetMap", 
+    "Esri.WorldStreetMap", "Esri.WorldTopoMap","Esri.WorldImagery",  "Esri.WorldTerrain", "Esri.OceanBasemap", "Esri.NatGeoWorldMap",
+    "CartoDB.Positron", "CartoDB.DarkMatter", 
+    "USGS.USTopo", "USGS.USImagery", "USGS.USImageryTopo"),
+    position = "topleft") %>% 
+  #~~~~~~~~~~~~~~~~~~~~~
+  
+  addControl() #Add arbitrary HTML controls to the map
+addTiles()  #Add a tile layer to the map
+addWMSTiles()  #Add a WMS tile layer to the map
+addPopups()  #Add popups to the map
+addMarkers()  #Add markers to the map, location icon is shown
+addLabelOnlyMarkers()  #Add Label only markers to the map
+addCircleMarkers() # Add circle markers to the map
+addCircles()  #Add circles to the map
+addPolylines() # Add polylines to the map
+addRectangles()  #Add rectangles to the map
+addPolygons() # Add polygons to the map
+highlightOptions() # Options to highlight a shape on hover
+addGeoJSON()  #Add GeoJSON layers to the map
+addTopoJSON()  #Add TopoJSON layers to the map
+
+
+m <- 
+  leaflet() %>%
+  # leaflet(df) %>% # if you have a lot of data points this will take a while
+  leafletOptions(minZoom = 14, dragging = FALSE)  %>% 
+  
   addTiles() %>%
-  setView(lng = -120.17, lat = 49.05, zoom = 12) %>%
   addProviderTiles(providers$Esri.WorldImagery) %>%
-  addPolylines(data = cathedral, color = "red",  # for outline, for fill use addPolygons()
-               # dashArray = "9,9",  # dashed outline
-               stroke = 1, opacity = 0.5) %>%
-  addMiniMap(width = 150, height = 150)
+  addProviderTiles(providers$USGS) %>% 
+  addProviderTiles(providers$SGS.USTopo) %>% 
+  addProviderTiles(providers$USGS.USImagery) %>% 
+  addProviderTiles(providers$USGS.USImageryTopo) %>% 
+  
+  
+  
+  #to view a preview of the different types of tiles -> https://leaflet-extras.github.io/leaflet-providers/preview/index.html
+  names(providers) #233 providers
+names(providers)[1:7]# OpenStreetMap
+names(providers)[66:76] #esri tiles
+names(providers)[151:161] # CartoDB tiles
+names(providers)[208:211] #USGS tiles
+
+
+
+addProviderTiles(providers$CartoDB.Positron) %>%
+  addProviderTiles(providers$Esri.NatGeoWorldMap) %>%
+  addProviderTiles(providers$Esri.WorldImagery) %>%
+  addProviderTiles(providers$OpenTopoMap) %>%
+  
+  # tiles that most likely requires tokens/keys: 
+  # Stamen
+  # Wikimedia
+  
+  setView(lng = -120.1761, lat = 49.03446, zoom = 10) %>% # center map to this location
+  # Set max bounds of map 
+  setMaxBounds(lng1 = df$lon[2] + .05, 
+               lat1 = df$lat[2] + .05, 
+               lng2 = df$lon[2] - .05, 
+               lat2 = df$lat[2] - .05) %>% 
+  
+  
+  
+  addCircles(lng = ~longitude, lat = ~latitude, # when adding data, ensure you have leaflet(df)
+             radius = 2,  # Circle radius in meters
+             color = goat_palette)  # colour by goat
+# add circle areas?
+addPolylines(data = shp, color = "red",  # add shapefile for outline, for fill use addPolygons()
+             # dashArray = "9,9",  # dashed outline
+             stroke = 1, opacity = 0.5) %>%
+  
+  
+  
+  
+  
+  # add a minimap to our basemap
+  addMiniMap(width = 150, height = 150) %>%
+  addMiniMap(
+    tiles = c(
+      "OpenStreetMap", "Esri.WorldStreetMap", "CartoDB.Positron",
+      "Esri.WorldImagery"
+    )[1],
+    toggleDisplay = TRUE) %>%
+  
+  
+  
+  # clear and reset map
+  map_zoom <- map_zoom %>% 
+  addMarkers(lng = wonders$lon, lat = wonders$lat) %>%
+  setView(lng = 20.6843, lat = 88.5678, zoom = 5)
+
+map_zoom %>%
+  clearMarkers() %>%
+  clearBounds()
+
+
+
+
+
+
+
+
 
 
 
