@@ -3,6 +3,16 @@
 
 #http://www.sthda.com/english/wiki/graphical-parameters
 
+# base r palettes
+palette()
+barplot(x, col = rainbow(6), xlab="Rainbow colors", sub="rainbow(n)")
+barplot(x, col = heat.colors(6), xlab="Yellow through red", sub="heat.colors(n)")
+barplot(x, col = terrain.colors(6), xlab="Gray through green(n)", sub="terrain.colors(n)")
+barplot(x, col = topo.colors(6), xlab="Purple through tan", sub="topo.colors(n)")
+barplot(x, col = cm.colors(6), xlab="Pinks and blues", sub="cm.colors(n)")
+
+
+
 #save plot
 png(file = "figures/figure1.png", width = 6.86, height = 6, units = "in", res = 600)
 par(mfrow=c(2,1))                    # plot arrangement
