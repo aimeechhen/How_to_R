@@ -88,7 +88,9 @@ scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
 scale_x_date(date_breaks = "1 month", date_labels = "%m-%y") +
 
 
-
+#..................................................................................
+# colours ----
+  
 guides(shape = FALSE, alpha = FALSE)        #remove legends for shape and alpha
 
 scale_shape_manual(values = c(16, 17))      #manually assign shape
@@ -97,8 +99,22 @@ scale_fill_manual(values = c("#228833", "#de2d26", "#feb24c"),
                   breaks = c('before', 'during', 'after'))
 scale_color_manual(values = c("#228833", "#de2d26", "#feb24c"), 
                     breaks = c('before', 'during', 'after'))
+scale_color_manual(name = "Date", values = rainbow(length(unique(fire_data$date))))
+scale_colour_hue()
 
-scale_color_manual(name = "Date", values = rainbow(length(unique(fire_data$date)))) +
+
+
+library(RColorBrewer)
+# _brewer categorical variable
+# _distiller to create a continuous color bar in the legend
+# _fermenter to create a binned (stepwise) color scale
+scale_fill_brewer(palette = "Dark2")
+scale_colour_brewer(palette = "Greens")
+scale_colour_distiller() 
+scale_colour_fermenter() 
+scale_fill_fermenter()
+scale_fill_brewer(palette = "Spectral")
+
 
 # use a blind color friendly palette
 library(khroma)
@@ -107,7 +123,14 @@ khroma::scale_color_bright()
 khroma::scale_fill_muted()
 scale_color_muted(name = "National Parks", labels = c("Glacier","Kootenay","Revelstoke","Pacific Rim","Yoho"))
 
+
+library(viridis)
 scale_fill_viridis()
+scale_color_viridis_d() # categorical variable for discrete color legends
+scale_color_viridis_c() #to generate continuous color bar
+scale_color_viridis_b() # to create binned (stepwise) color scale
+
+
 
 
 #__________________________________________________________________________
@@ -136,9 +159,11 @@ theme(
   legend.direction = "horizontal",
   legend.justification = "center",
   legend.position="none", #removes legend
+    guides(color = guide_legend(nrow = 1)) # put the legend in one row
+  
   legend.position = c(0.5, 1.05), #manually set legend center and above plot (horizontal, vertical)
   legend.position = c(0.8, 0.9), #manually set position (horizontal, vertical)
-  legend.title = element_blank(), 
+  legend.title = element_blank(),  # remove legend title
   legend.text = element_text(size=6, family = "sans", face = "bold"),
   legend.key.height = unit(0.3, "cm"),
   legend.key=element_blank(),
