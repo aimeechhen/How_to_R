@@ -1,0 +1,75 @@
+[
+	{
+		"title" : "Parks and Protected Areas Regional Boundaries",
+		"name" : "parks-and-protected-areas-regional-boundaries",
+		"bcdc_data_resource_url" : "https://catalogue.data.gov.bc.ca/dataset/05bcdb49-1839-4eb7-8cd8-ad5fff13f1c0",
+		"description" : "The spatial representation for Parks and Protected Areas Administrative Regions. A Parks and Protected Area Administrative Region is an administrative area established by the Ministry and is an administrative area which is used to manage regional activites.",
+		"purpose" : "To support regional administration of parks and protected areas.",
+		"bcdc_type" : "Geographic",
+		"last_modified" : "2020-07-10T18:16:02",
+		"resource_storage_location" : "Bc Geographic Warehouse",
+		"object_name" : "WHSE_ADMIN_BOUNDARIES.ADM_BC_PARKS_REGIONS_SP",
+		"object_short_name" : "PARK_REG",
+		"object_table_comments" : "This layer contains Provincial Protected Areas Branch (BC Parks) Region administrative structure boundaries. Boundaries  were compiled existing provincial 1:20,000 cadastral, TRIM and watershed data and/or provincial Legal Surveys Division's cadastral datasets existing in the provincial land title registry systems., Large scale Integrated Cadastral (large scale) may have  been used in specific park data. This layer utilizes multi-part polygon geometry.",
+		"projection_name" : "epsg3005",
+		"license_title" : "Access Only",
+		"license_url" : "https://www2.gov.bc.ca/gov/content?id=1AAACC9C65754E4D89A118B875E0FBDA",
+		"details" : [
+			{
+				"data_type" : "NUMBER",
+				"column_comments" : "REGION NUMBER contains the provincial region boundary number officially approved by Provincial Protected Areas Branch (BC Parks). This is a user maintained primary key. E.g., 1, 2, or 3",
+				"column_name" : "REGION_NUMBER",
+				"short_name" : "REG_NUM",
+				"data_precision" : "11"
+			},
+			{
+				"short_name" : "REG_NAME",
+				"data_type" : "VARCHAR2",
+				"column_comments" : "REGION NAME contains the provincial region boundary name officially approved by Provincial Protected Areas Branch (BC Parks). E.g., West Coast Region",
+				"data_precision" : "100",
+				"column_name" : "REGION_NAME"
+			},
+			{
+				"short_name" : "F_CODE",
+				"column_comments" : "FEATURE CODE contains a value based on the Canadian Council of Surveys and Mapping's (CCSM) system for classification of geographic features.",
+				"data_type" : "VARCHAR2",
+				"column_name" : "FEATURE_CODE",
+				"data_precision" : "10"
+			},
+			{
+				"short_name" : "GEOMETRY",
+				"column_comments" : "GEOMETRY is the column used to reference the spatial coordinates defining the feature. ",
+				"data_type" : "SDO_GEOMETRY",
+				"column_name" : "GEOMETRY",
+				"data_precision" : "1"
+			},
+			{
+				"short_name" : "OBJECTID",
+				"column_name" : "OBJECTID",
+				"data_precision" : "38",
+				"data_type" : "NUMBER",
+				"column_comments" : "OBJECTID is a required attribute of feature classes and object classes in a geodatabase. "
+			},
+			{
+				"column_comments" : "SE_ANNO_CAD_DATA is a binary column used by spatial tools to store annotation, curve features and CAD data when using the SDO_GEOMETRY storage data type. ",
+				"column_name" : "SE_ANNO_CAD_DATA",
+				"data_precision" : "4000",
+				"data_type" : "BLOB"
+			},
+			{
+				"data_type" : "NUMBER",
+				"column_comments" : "FEATURE_AREA_SQM is the system calculated area of a two-dimensional polygon in square meters",
+				"column_name" : "FEATURE_AREA_SQM",
+				"data_precision" : "19",
+				"short_name" : "AREA_SQM"
+			},
+			{
+				"column_comments" : "FEATURE_LENGTH_M is the system calculated length or perimeter of a geometry in meters",
+				"column_name" : "FEATURE_LENGTH_M",
+				"data_type" : "NUMBER",
+				"data_precision" : "19",
+				"short_name" : "FEAT_LEN"
+			}
+		]
+	}
+]
