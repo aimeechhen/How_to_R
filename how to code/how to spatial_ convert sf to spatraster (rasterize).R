@@ -32,3 +32,15 @@ capture_timestamp <- FOIPPA$timestamp[i]
 outline_spatvector$timestamp <- capture_timestamp
 # then convert spatvector into a spatraster object using the spatial properties outlined above and set background cells/pixels in the raster to 0 so the raster contains only values of 0 or 1 (0 = outside the polygon, 1 = inside the polygon) via field and background arguments
 r <- rasterize(outline_spatvector, raster_template, field = "timestamp", background = 0)
+
+
+
+
+
+
+
+
+
+
+
+
