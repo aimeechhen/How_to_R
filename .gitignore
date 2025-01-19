@@ -15,11 +15,13 @@ how to code/noaa_resources
 how to code/intro_r_resources/
 
 
-data/spatial/CWFIS_Datamart
-data/spatial/gov_bc_fire
-data/spatial/modis_nrt
-data/spatial/nasa_fire
-data/spatial/noaa_goes18
-data/spatial/noaa_ndvi
-data/spatial/shapefiles/Provincial_Parks_BC_Albers
 
+data/CWFIS_Datamart
+data/gov_bc_fire
+data/modis_nrt
+data/fire_firms
+data/noaa_goes18
+data/noaa_ndvi
+data/shapefiles/bc_provincial_parks/Provincial_Parks_BC_Albers.zip
+data/shapefiles/canada_national_parks/other_provinces
+data/shapefiles/canada_national_parks/CLAB_CA_2023-09-08.zip
