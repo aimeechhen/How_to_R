@@ -1,6 +1,24 @@
 
 # How to create directory, check if directory exist, made, saved and object loaded from directory
 
+
+
+
+# Check if the directory exists
+if (!dir.exists(dir_path)) {
+  # Create the directory
+  dir.create(dir_path, recursive = TRUE)
+  message("Directory created: ", dir_path)
+} else {
+  message("Directory already exists: ", dir_path)
+}
+
+# check and create in one line of code
+dir.create(dir_path, recursive = TRUE, showWarnings = TRUE)
+dir.exists("directory/path") || dir.create("directory/path", recursive = TRUE)
+
+
+
 # Create directory
 # add 'recursive = TRUE' to create any necessary parent directories
 dir.create(paste("./data/home_range/", period, "/Fits_with_error", sep = ""), recursive = TRUE)
