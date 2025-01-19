@@ -2,6 +2,12 @@
 #folder location
 #C:\Users\Pokedex\AppData\Roaming\RStudio\themes
 
+# Apply current theme from github repo (local and websource method)
+library("rstudioapi")
+rstudioapi::addTheme("C:/Users/windows95/OneDrive - UBC/Github/How_to_R/themes/current_rstheme.rstheme", apply = TRUE)
+# rstudioapi::addTheme("https://github.com/aimeechhen/How_to_R/blob/main/themes/current_rstheme.rstheme", apply = TRUE)
+
+
 # How to customize themes
 #https://docs.posit.co/ide/user/ide/guide/ui/appearance.html
 #https://github.com/gadenbuie/rsthemes
@@ -19,7 +25,7 @@ install.packages("rstudioapi")
 
 #Base 16 themes R package
 install.packages("rsthemes",
-  repos = c(gadenbuie = 'https://gadenbuie.r-universe.dev', getOption("repos")))
+                 repos = c(gadenbuie = 'https://gadenbuie.r-universe.dev', getOption("repos")))
 
 #Load packages
 library("rstudioapi")
@@ -27,6 +33,7 @@ library("rsthemes")
 
 #Add themes
 rstudioapi::addTheme("https://raw.githubusercontent.com/batpigandme/night-owlish/master/rstheme/night-owlish.rstheme", apply = TRUE)
+
 
 #Install 109 themes from the Base 16 package
 rsthemes::install_rsthemes(include_base16 = TRUE)
@@ -53,7 +60,7 @@ rstudioapi::applyTheme("Testing_rstheme")
 rsthemes::set_theme_light()
 rsthemes::set_theme_dark()
 
-#Add your favorite themes to your .Rprofile
+#Add your favourite themes to your .Rprofile
 #Located here "C:/Users/Username/Documents/.Rprofile"
 
 # current favourite themes for font colours (as of 2023-10-23)
@@ -132,44 +139,44 @@ rstudioapi::applyTheme("path/to/my-light-theme.rstheme")
 #when you select a word, this highlights the matching word found through out script
 .ace_marker-layer .ace_selection {
   background: #0077BB;
+}
 
 #to modify selected line
 .ace_marker-layer .ace_active-line {
   background: #f0f0f0;
+}
+#color of the word highlighted/selected
+.ace_marker-layer .ace_selected-word {
+  background: #004488;
+}
 
-    #color of the word highlighted/selected
-    .ace_marker-layer .ace_selected-word {
-      background: #004488;
-    }
-    
 #............................................................
-    
+
+# current colour palette
+'#0077BB' # .ace_selection
+'#f0f0f0' # .ace_active
+'#004488' # .ace_selected
+
+# colour blind palette
+'#0570B0' # .ace_selection
+'#F7FBFF' # .ace_active
+'#084081' # .ace_selected
+
+
 # Colour samples
-#Blue       
-"#007faa"
-"#2b8cbe"
-"#3182bd"
-"#0077BB"
-"#88ccee"
-"#77AADD"
-"#5385BC"
-"#2166AC"
-"#364B9A"
-"#004488"
-"#ADD8E6"
-"#99CCFF"
 
-"#87CEEB"
-
-"#CC99FF"
-"#9966FF"
-"#9370DB"
-
-"#eecc66"
-"#FFFF66"
+# colour blind friendly
+"#A50026" "#D73027" "#F46D43" "#FDAE61" "#FEE090" "#FFFFBF" "#E0F3F8" "#ABD9E9" "#74ADD1" "#4575B4" "#313695"
+"#FFFFD9" "#EDF8B1" "#C7E9B4" "#7FCDBB" "#41B6C4" "#1D91C0" "#225EA8" "#253494" "#081D58"
+"#F7FBFF" "#DEEBF7" "#C6DBEF" "#9ECAE1" "#6BAED6" "#4292C6" "#2171B5" "#08519C" "#08306B"
+"#FFF7FB" "#ECE2F0" "#D0D1E6" "#A6BDDB" "#67A9CF" "#3690C0" "#02818A" "#016C59" "#014636"
+"#FFF7FB" "#ECE7F2" "#D0D1E6" "#A6BDDB" "#74A9CF" "#3690C0" "#0570B0" "#045A8D" "#023858"
+"#F7FCF0" "#E0F3DB" "#CCEBC5" "#A8DDB5" "#7BCCC4" "#4EB3D3" "#2B8CBE" "#0868AC" "#084081"
 
 
-"#f0f0f0"
+
+
+
 #............................................................
 
 # Additional rsthemes not part of the base16
@@ -180,21 +187,3 @@ rstudioapi::addTheme(
   apply = FALSE
 )
 
-#............................................................
-
-#zotero plug in
-install.packages("citr")
-devtools::install_github("crsh/citr", force = TRUE)
-install.packages("rbbt")
-
-
-### need to fix intstructions!!!!
-#zotero citation styles using Rmarkdown
-download.file("https://www.zotero.org/styles/ecology?source=1", destfile = "C:/Users/achhen/OneDrive - UBC/How to R/zotero citation styles/ecology.csl")
-
-#search styles here
-# https://www.zotero.org/styles
-#download the csl from the website and put it in the folder for rmarkdown to retrieve
-# click on source beside the style type, copy that url
-# in YAML section of Rmarkdown put:
-# csl: ecology.csl
