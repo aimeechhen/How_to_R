@@ -11,6 +11,9 @@ excel_sheets(file) # list all the sheet names in the excel file
 #_________________________________________________________________________
 # Data wrangling ----
 
+# add goat_name column, match them based on collar_id
+HR_size$collar_id <- collar_data$collar_id[match(HR_size$goat_name, collar_data$goat_name)]
+
 #Split the column into multiple rows
 df_expanded <- separate_rows(df, your_column, sep = ",")
 
@@ -26,15 +29,18 @@ goat_data <- left_join(goat_data, filter(goat_info, goat_id != "CA03"), by = "co
 grepl() # select objects that contains certain text
 hr.shp <- combined_sf[grepl("95% est", combined_sf$name), ]
 strictosidine <- dat[grepl("strictosidine", dat$ann_cro_2, ignore.case = TRUE), ]
+tau_p <- summary[grepl("position", rownames(summary)),] # extract the row with the rowname that contains the text string
+# some are in hours and mostly in days, so convert the ones with hour units into day units (i.e. 24 hours)
+tau_p[grep("hours", rownames(tau_p)), ] <- tau_p[grep("hours", rownames(tau_p)), ] / 24
 
 rownames()
 df$column <- rownames(df) #extract rownames into column
-colnames(mw.dat)[2] <- 'timestamp' #rename column, simplied
+colnames(mw.dat)[2] <- 'timestamp' #rename column, simplified
 colnames(mw.dat)[colnames(mw.dat) == 'Time'] <- 'timestamp' ##rename column, more explicit
 
 library(stringr)
 str_detect() # select objects that contains certain text
-hr95.shp = hr.shp[str_detect(hr.shp$name, "est"),]
+hr95.shp <- hr.shp[str_detect(hr.shp$name, "est"),]
 
 
 
@@ -72,6 +78,12 @@ library(lubridate)
 
 #check timezone
 attr(df$timestamp[1], "tzone")
+tz(collar_data$timestamp)
+TIMESTAMP <- as.POSIXct(df, 
+                        origin="1970-01-01", # add if in Unix timestamp format to convert
+                        tz = lutz::tz_lookup_coords(df$latitude[1],
+                                                    df$longitude[1],
+                                                    method = "fast")) # fast method is used because all the data are in the same timezone, adjust if they cross timezone boundaries
 
 # format time from HHMM into to HH:MM:SS
 df$time <- format(strptime(df$time, format = "%H%M"), format = "%H:%M:%S")
@@ -131,6 +143,10 @@ dat.hr$season <- sub("^(.*?)_.*", "\\1", dat.hr$individual.local.identifier)
 dat.hr$period <- sub("^[^_]*_(.*?)_.*", "\\1", dat.hr$individual.local.identifier)
 #extract text after the second _ underscore (i.e. collar_id)
 dat.hr$collar_id <- sub("^(?:[^_]*_){2}(.*)", "\\1", dat.hr$individual.local.identifier)
+# extract the goat name from individual.local.identifier, i.e. drop the "_year" portion
+HR_size$goat_name <- gsub("_[0-9]{4}$", "", HR_size$individual.local.identifier)
+# extract the year, i.e. last 4 digits after the _
+HR_size$year <- gsub(".*_([0-9]{4})$", "\\1", HR_size$individual.local.identifier)
 
 
 # searches for string of text and extract information from 'individual.local.identifier' column and puts a string of text into a new column based on those conditions
@@ -143,7 +159,28 @@ rsf_coeff[grepl("summer", rsf_coeff$individual.local.identifier),"season"] <- "s
 
 
 #_________________________________________________________________________
-# Save outputs into a textfile ----
+
+# saving files ----
+## csv ----
+# save as csv if you are planning to view the file outside of R, for easy access without having to open and load the file/data
+write.csv(x, file = "./path/to/folder/file.csv")
+x <- read.csv(file = "./path/to/folder/file.csv")
+
+
+#.........................................................
+# rda 
+# useful if you dont want to import the file and assign it to an object, it is read in and assigned to the object text string when you originally saved it
+save(x, file = "./path/to/folder/file.rda")
+load(file = "./path/to/folder/file.rda") # this will load into the environment as 'x'
+
+#.........................................................
+# rds
+# if you are importing it in and needing to assign it to different object names depending on the scenario the file/data is being used
+saveRDS(x, file = file = "./path/to/folder/file.rds")
+whale <- readRDS(file = "./path/to/folder/file.rds") # object cannot be x as there might already be something named x in the environment, or it might be whale for one script and marine for another script
+
+#.........................................................
+## Save outputs into a textfile ----
 
 sink() # export and save output of function, requires to terminate exportation process once completed 
 
@@ -158,6 +195,11 @@ print("CI Values (lower, upper)")
 # est + upper & lower z-score * std err
 print(-0.1105 + c(-1.96,1.96) * 0.1670)
 sink() #terminate output exporting connection/process (multiple functions can be exported)
+
+
+
+
+
 
 
 #_________________________________________________________________________
@@ -179,3 +221,6 @@ dt = 1 %#% 'day' # '%#%' This converts it into days (si units), you can replace 
 datatype(elev) #FLT4S: 32-bit float (single precision) .-. numerical
 #inspect values and check range of value
 range(values(elev), na.rm = TRUE)
+
+
+
