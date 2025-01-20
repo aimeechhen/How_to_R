@@ -49,17 +49,27 @@ library(RColorBrewer)
 # display mid group: qualitative (categorical )
 # display bot group: diverging (categorical -> range scale, focus on mid-range value with extremes at both end of the range)
 
-display.brewer.all()
-display.brewer.all(colorblindFriendly = TRUE)
-# 1. Visualize a single RColorBrewer palette via palette name
-display.brewer.pal(n, name)
+brewer.pal.info # returns information about the available palettes as a dataframe. brewer.pal.info is not a function, it is a variable. This might change in the future.
+display.brewer.all() #visalise all the palettes as a plot
+display.brewer.all(colorblindFriendly = TRUE) # visalise as a plot
 
-# extract hex codes from palette
-colors.9 <- brewer.pal(n = 9, name = "Set3")
-colors.9
-# visalise hex codes
-library(scales)
-show_col(colors.9)
+# 1. Visualize a single RColorBrewer palette via palette name 
+# n= number of colours, name = palette name
+display.brewer.pal(n = 11, name ="RdYlBu") # visalise palette as a plot
+
+col_palette <- brewer.pal(n = 9, name = "YlGnBu")
+col_palette <- brewer.pal(n = 9, name = "PuBuGn")
+col_palette <- brewer.pal(n = 9, name = "PuBu")
+col_palette <- brewer.pal(n = 9, name = "GnBu")
+col_palette <- brewer.pal(n = 9, name = "BuPu")
+col_palette <- brewer.pal(n = 9, name = "Blues")
+
+col_palette <- brewer.pal(n = 8, name = "Set2") # extract hex codes from palette
+col_palette <- brewer.pal(n = 11, name = "RdYlBu")
+
+col_palette # print the codes
+
+scales::show_col(col_palette) # visalise palette with hex codes as a plot
 
 
 #............................................................
@@ -68,6 +78,8 @@ library(khroma)
 # Colour palette that contains colour blind friendly colours, khroma palette -> https://cran.r-project.org/web/packages/khroma/vignettes/tol.html
 muted <- colour("muted")
 # https://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3
+
+
 
 
 
