@@ -96,6 +96,21 @@ rast_list <- lapply(rast_files, rast)
 names(rast_list) <- gsub("\\.tif$", "", basename(rast_files))
 
 
+#..........................................
+# RDS files
+
+# Set the folder path
+folder_path <- "data/rds"
+# Load .shp, .tif etc files within a folder including all the subfolders
+rds_files <- list.files(folder_path, pattern = "\\.rds$", full.names = TRUE)
+# Import/read all the files into a list
+rds_list <- lapply(rds_files, readRDS)
+# combine together as one list
+rds_dat <- do.call(c, rds_list)
+
+
+
+
 #_______________________________________________________
 #_______________________________________________________
 # from google drive ----
