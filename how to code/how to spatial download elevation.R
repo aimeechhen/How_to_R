@@ -44,6 +44,14 @@ saveRDS(elevation_point, file = "rds/elevation_point.rds")
 
 library(elevatr)
 
+# https://github.com/tilezen/joerd/blob/master/docs/data-sources.md
+#*********need to double check these values************
+# Zoom Level 5: ~100 km resolution.
+# Zoom Level 7: ~25 km resolution.
+# Zoom Level 10: ~2.5 km resolution.
+# Zoom Level 12: ~1 km resolution.
+# Zoom Level 14: ~25 m resolution.
+
 #import data containing latitude and longitude
 load("data/goat/goat_data_v2.rda")
 

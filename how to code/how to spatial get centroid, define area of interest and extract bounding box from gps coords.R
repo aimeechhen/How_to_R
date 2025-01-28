@@ -2,7 +2,7 @@
 
 # import your data and convert into an sf object
 load("data/collar_data/collar_data_20240703.rda")
-# convert data into sf object
+# convert df into sf object
 collar_data_sf <- st_as_sf(collar_data, coords = c('longitude', 'latitude'))
 # set crs as lat/long system
 st_crs(collar_data_sf) <- 4326
