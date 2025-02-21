@@ -1,4 +1,40 @@
 
+# common/popular packages
+library(sf)
+library(raster) # might be getting depreciated? switch to terra
+library(terra)
+library(tidyterra)
+# rgdal depreciated, use terra
+# sp depreciated, use sf
+
+
+#...............................................................
+# How to spatial data basics:
+
+# 1. import the file(s)
+# 2. visualize the data
+# 3. inspect spatial data properties
+
+# Properties
+# 1. crs (coordinate reference system)
+# 2. extent (or bounding box), i.e., the range of the data spatially, how large is it etc.
+# 3. resolution, how fine scale is the data? 10m scale? 1km scale? 5km scale?
+# 4. other
+
+# if working with multiple files
+# ensure all files are the same object type, i.e., sf, spatraster etc
+# check the data properties before converting/manipulating anything!!
+# then start matching data properties via
+# reprojecting, transforming, cropping, buffering, resampling, scaling etc
+# various packages calls them different things
+
+
+
+
+#////////////////////////////////////////////////////
+#////////////////////////////////////////////////////
+
+
 
 # get bounding box values
 bbox <- st_bbox(x)
@@ -108,14 +144,14 @@ data.frame(long = rnorm(100),
   ungroup() %>%
   st_centroid()
 
+
+
+
 #................................................................
 
 
 
-
-#////////////////////////////////////////////////////////
-
-# how to extract raster values based on polygon
+# how to extract raster values based on polygon ----
 #reproject the CRS to a geographic coordinate system (e.g., WGS 84)
 FOIPPA <- st_transform(FOIPPA, crs = st_crs("epsg:4326"))
 #get bounding box
@@ -136,3 +172,28 @@ masked_dem <- mask(cropped_dem, FOIPPA)
 el_value <- as.data.frame(masked_dem, xy = TRUE, na.rm = TRUE)
 # rename columns
 colnames(el_value) <-  c("long", "lat", "el")
+
+
+
+# how to convert shapefile polygons (sf object) into a dataframe and their coordinates ----
+# Extract the coordinates
+coords <- st_coordinates(cathedral)
+# Combine coordinates with the attributes of the sf object
+cathedral_coords <- cbind(st_drop_geometry(cathedral), coords)
+# create df so it can be used in movevis
+cathedral_df <- data.frame(x = cathedral_coords$X,
+                           y = cathedral_coords$Y)
+
+
+# how to define an area of interest ----
+centroid <- st_centroid(cathedral)
+# defining the area of interest based on the center of the collar data/park and radius around it (in meters)
+area_of_interest <- st_buffer(centroid, dist = 15000)
+# Create a geometry for the area of interest
+area_of_interest <- st_as_sfc(st_bbox(area_of_interest))
+st_crs(area_of_interest) <- 4326 
+# extract aoi
+aoi_bbox <- as.numeric(st_bbox(area_of_interest)[c("xmin", "xmax", "ymin", "ymax")])
+
+plot(area_of_interest)
+plot(cathedral, add = TRUE)
