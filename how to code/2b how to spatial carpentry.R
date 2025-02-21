@@ -109,3 +109,30 @@ data.frame(long = rnorm(100),
   st_centroid()
 
 #................................................................
+
+
+
+
+#////////////////////////////////////////////////////////
+
+# how to extract raster values based on polygon
+#reproject the CRS to a geographic coordinate system (e.g., WGS 84)
+FOIPPA <- st_transform(FOIPPA, crs = st_crs("epsg:4326"))
+#get bounding box
+bbox <- st_bbox(FOIPPA)
+
+#Get elevation raster for the region(s) of interest (units = meters)
+dem_raster <- get_elev_raster(locations = FOIPPA, 
+                              z = 9,
+                              clip = 'bbox',
+                              expand = 0.2)
+raster::plot(dem_raster)
+
+# crop and mask elevation raster to extract values within boundaries
+cropped_dem <- crop(dem_raster, FOIPPA)
+masked_dem <- mask(cropped_dem, FOIPPA)
+
+# extract elevation values
+el_value <- as.data.frame(masked_dem, xy = TRUE, na.rm = TRUE)
+# rename columns
+colnames(el_value) <-  c("long", "lat", "el")
