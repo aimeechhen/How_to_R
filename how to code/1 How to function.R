@@ -38,6 +38,28 @@ df$column <- rownames(df) #extract rownames into column
 colnames(mw.dat)[2] <- 'timestamp' #rename column, simplified
 colnames(mw.dat)[colnames(mw.dat) == 'Time'] <- 'timestamp' ##rename column, more explicit
 
+
+# store models/UDs in a list, name the entry based on goat name and subset window start date, not the times[i] as that is in unix format (this is for a for loop)
+fits[[paste0(DATA@info[1], "_", as.character(WINDOW_START))]] <- FITS
+
+
+# Compare two columns
+head(df[, c("a", "b")])
+
+
+# create a dataframe -> Combine the lists into a dataframe and set the column names to match
+df <- setNames(as.data.frame(do.call(cbind, list(goat_name, window_start, window_end, n_fixes, mean_elev, mean_dist_escape))), 
+                       c("goat_name", "window_start", "window_end", "n_fixes", "mean_elev", "mean_dist_escape"))
+# without having to manually rename the columns -> combine into a tibble then convert into a dataframe
+df <- as.data.frame(tibble(goat_name, window_start, window_end, n_fixes, mean_elev, mean_dist_escape))
+
+
+# remove unnecessary characters ("[", " ", etc.) and replace with "_", useful for cleaning column names
+janitor::clean_names() 
+
+# combine two dataframes and match the same column names together and whatever columns are missing, they are just added and given NA values
+combined_df <- bind_rows(df1, df2)
+
 library(stringr)
 str_detect() # select objects that contains certain text
 hr95.shp <- hr.shp[str_detect(hr.shp$name, "est"),]
@@ -224,3 +246,7 @@ range(values(elev), na.rm = TRUE)
 
 
 
+# check if all rows have the same values between two columns, ensure both are the same object type
+identical(df$col1, df$col2)
+# identify which rows are not matching
+which(df$col1 != df$col2)
