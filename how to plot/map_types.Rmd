@@ -1,0 +1,38 @@
+---
+title: "map types"
+output: html_document
+date: "2025-02-20"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+Map types
+
+
+```{r}
+library(basemaps)
+get_maptypes(map_service = NULL)
+```
+
+
+
+
+```{r}
+library(leaflet)
+#to view a preview of the different types of tiles -> https://leaflet-extras.github.io/leaflet-providers/preview/index.html
+names(providers) #233 providers
+names(providers)[1:7]# OpenStreetMap
+names(providers)[66:76] #esri tiles
+names(providers)[151:161] # CartoDB tiles
+names(providers)[208:211] #USGS tiles
+```
+
+```{r}
+names(providers)
+```
+
