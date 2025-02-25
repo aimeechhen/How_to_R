@@ -15,12 +15,9 @@ bquote('Diffusion (' * m^2 * '/s)') # superscript
 
 
 
-#modify legend
-labs(fill = "Elevation (m)") #title
-guides(fill=guide_legend(title="New Legend Title"))
-guides(col = guide_colourbar(title = "Some title"))
 
-
+# subset data in ggplot
+ggplot(data = subset(dat2, dist_to_fire_km < 20)) +
 
 
 #__________________________________________________________________________
@@ -28,19 +25,19 @@ guides(col = guide_colourbar(title = "Some title"))
 
 linewidth = 1.5 # line thickness
 linetype = "dashed", "solid" #etc changes the line style
+size = ifelse(year == 2023, 3, 1) # if you want to only change size of the points for one specific year/condition etc
+# note: if you dont want a legend associated with the size of points, include this
+guides(size = "none")
 
-## bar plot, stacked ----
 geom_bar(stat = "identity", position = "stack", fill = "red")
 geom_hline(yintercept = 1, col = "grey70", linetype = "dashed") # add a horizontal line
 geom_vline(xintercept = as.Date('2020-03-31'), color = "black", linewidth = 1, linetype = 2) + # start of covid
   
-geom_sf(data= cathedral, fill = NA, size = 1.5) +
-geom_sf(data = goes, color = "purple", fill = NA, size = 1.5) +
+  geom_sf(data= cathedral, fill = NA, size = 1.5) +
+  geom_sf(data = goes, color = "purple", fill = NA, size = 1.5) +
   
   
-  # labels, titles
-  ggtitle("A)") + 
-  labs(tag = "x") + # tag = "x", used with ggtitle() to have additional labels
+ 
   
   
   
@@ -86,11 +83,11 @@ scale_y_log10(expand = c(0,0.1))
 scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
              date_labels = "%b")
 scale_x_date(date_breaks = "1 month", date_labels = "%m-%y") +
-
-
-#..................................................................................
-# colours ----
   
+  
+  #..................................................................................
+  # colours ----
+
 guides(shape = FALSE, alpha = FALSE)        #remove legends for shape and alpha
 
 scale_shape_manual(values = c(16, 17))      #manually assign shape
@@ -98,7 +95,7 @@ scale_alpha_manual(values = c(0.8,0.6))     #manually adjust colour transparency
 scale_fill_manual(values = c("#228833", "#de2d26", "#feb24c"), 
                   breaks = c('before', 'during', 'after'))
 scale_color_manual(values = c("#228833", "#de2d26", "#feb24c"), 
-                    breaks = c('before', 'during', 'after'))
+                   breaks = c('before', 'during', 'after'))
 scale_color_manual(name = "Date", values = rainbow(length(unique(fire_data$date))))
 scale_colour_hue()
 
@@ -143,10 +140,11 @@ theme_classic() #does not include gridlines by default
 theme_bw()
 theme_void() #Set a completely blank theme, to get rid of all background and axis elements
 theme(
+  # plot panel ----
   panel.grid.major = element_blank(), #removes horizontal gridlines
   panel.grid.minor = element_blank(), #removes vertical gridlines
   
-
+  # axes ----
   axis.title.y = element_text(size=10, family = "sans", face = "bold"),
   axis.title.x = element_text(size=10, family = "sans", face = "bold"),
   axis.text.y = element_text(size=8, family = "sans"),
@@ -154,22 +152,36 @@ theme(
   axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), # vertical labels
   axis.ticks = element_blank(),
   
-  # legend
+  # labels, titles ----
+  ggtitle("A)") + 
+    labs(tag = "x") + # tag = "x", used with ggtitle() to have additional labels
+  
+  # legend ----
+  legend.position = c(0.5, 1.05), #manually set legend center and above plot (horizontal, vertical)
+  legend.position = c(0.8, 0.9), #manually set position (horizontal, vertical)
   legend.position = "top",
   legend.direction = "horizontal",
   legend.justification = "center",
   legend.position="none", #removes legend
-    guides(color = guide_legend(nrow = 1)) # put the legend in one row
+  legend.title = element_text(hjust = 0) # Lower the title closer to the legend items
+  legend.margin = margin(t = -5))  # Reduce margin at the top
+  guides(color = guide_legend(nrow = 1)) # put the legend in one row
   
-  legend.position = c(0.5, 1.05), #manually set legend center and above plot (horizontal, vertical)
-  legend.position = c(0.8, 0.9), #manually set position (horizontal, vertical)
+
   legend.title = element_blank(),  # remove legend title
+  guides(linetype = "none") # removes the (often) second legend
   legend.text = element_text(size=6, family = "sans", face = "bold"),
   legend.key.height = unit(0.3, "cm"),
   legend.key=element_blank(),
   legend.background = element_rect(fill = "transparent"),
+  #modify legend
+  labs(fill = "Elevation (m)") #title
+  guides(fill=guide_legend(title="New Legend Title"))
+  guides(col = guide_colourbar(title = "Some title"))
   
-  # change the panel background colour and transparency
+  
+  
+  # change the panel background colour and transparency ----
   panel.background = element_rect(scales::alpha("#005f73", 0.6)),
   panel.background = element_rect(fill = "transparent"),
   panel.border = element_blank(), #plot boundary
@@ -184,21 +196,44 @@ theme(
   plot.margin = unit(c(0.2,0.1,0.2,0.2), "cm"), #top, right, bot, left
   plot.margin = unit(c(0.75,0.5,0.25,0.25), "in"), #top, right, bot, left
   
-
+  
 )
 
+
+
+
+# shapes ----
+
+library(ggstar)
+show_starshapes()
+# use geom_star instead of geom_point
+geom_star(aes(starshape=Species, fill=Species), size=2.5) +
 
 #__________________________________________________________________________
 # multi-panel plotting ----
 
-#use facet wrap
+## facet wrap ----
 facet_wrap(~ ID,# sort by ID
            ncol = 2, nrow = 5,
            scales = "free_y", # only xaxis is fixed
-           scales = "fixed") +  #set axis so theyre the same for every plot
+           scales = "fixed")  #set axis so theyre the same for every plot
 
 
-#use gridExtra package
+
+library(ggh4x) # to fill in facet wrap title boxes
+strip <- strip_themed(background_x = 
+                        elem_list_rect(fill = goat_palette))
+
+ggplot() +
+  facet_wrap2(~ ID, scales = "fixed", #sorted by ID & set axis so theyre the same for every plot 
+              ncol = 2, nrow = 3, strip = strip) +  
+  scale_color_manual(values = goat_palette) +
+  theme(legend.position = "none",
+        strip.text = element_text(color = "white", face = "bold"))
+
+
+#...............................................
+#gridExtra package ----
 plot <- grid.arrange(plot1, plot2,
                      ncol=2)
 
@@ -225,13 +260,15 @@ ggsave(last_plot(),  file="figures/fig1.png",
 
 library(gganimate)
 
+labs(title = "{frame_time}") +
 
 enter_fade() +
-  exit_fade()
+  exit_fade() +
 enter_appear() +
-  exit_disappear()
+  exit_disappear() +
 transition_time() #transitions are 'travelling' from one tile to the next.
 #prevent the points from lingering or connecting, make them only visible for their time step
+transition_states()
 shadow_mark(past = FALSE, future = FALSE)
 
 ease_aes('linear')
