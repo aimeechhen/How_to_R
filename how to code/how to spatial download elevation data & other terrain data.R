@@ -7,6 +7,7 @@ library(sf)           # for spatial data
 library(terra)        # for raster data
 library(progress)     # for elevation, get_elev_raster()
 library(raster)
+library(elevatr)
 
 
 
@@ -36,6 +37,7 @@ bbox <- st_bbox(coord_sf)
 
 #Get elevation raster for the region(s) of interest (units = meters)
 # zoom level 1:14, 14 fine scale -> z = 9-12 ~90m resolution; z = 13-14 ~10-30m resolution
+#https://github.com/tilezen/joerd/blob/master/docs/data-sources.md#what-is-the-ground-resolution
 dem_raster <- get_elev_raster(locations = coord_sf, 
                               z = 9,
                               clip = 'bbox',
@@ -114,3 +116,20 @@ plot(elev, col = terrain.colors(25), alpha = 0.5, legend = FALSE,
      axes = FALSE, add = TRUE)
 # add contour lines
 contour(elev, col = "grey40", add = TRUE)
+
+
+
+
+library(canadianmaps)
+# get bc shape file
+bc_shape <- st_as_sf(PROV) %>%  # convert to spatial features (sf) object
+  filter(PRENAME == 'British Columbia') # filter to BC only
+#Retrieve coordinate reference system (CRS) and set the CRS to a geographic coordinate system (e.g., WGS 84)
+st_crs(bc_shape) <- st_crs("+proj=longlat +datum=WGS84")
+# transform to latlon
+bc_shape <- st_transform(bc_shape, crs = "epsg:4326")
+# get elevation data
+dem_raster <- get_elev_raster(locations = bc_shape, 
+                              z = 6,
+                              clip = 'locations') # "locations" if the spatial data (e.g. polygons) in the input locations should be used to clip the DEM
+plot(dem_raster)
