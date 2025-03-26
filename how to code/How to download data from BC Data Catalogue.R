@@ -121,6 +121,14 @@ WHSE_LAND_AND_NATURAL_RESOURCE.PROT_FUEL_TYPE_SP <- bcdc_query_geodata("WHSE_LAN
 bcdc_get_citation("https://catalogue.data.gov.bc.ca/dataset/bc-wildfire-fire-fuel-types-public/resource/a0d25dd1-e906-4b9f-994e-bf99098621d0")
 
 
+#...........................................................
+# fire zones ----
+
+WHSE_LEGAL_ADMIN_BOUNDARIES.DRP_MOF_FIRE_ZONES_SP <- bcdc_query_geodata("WHSE_LEGAL_ADMIN_BOUNDARIES.DRP_MOF_FIRE_ZONES_SP") %>%
+  collect()
+bcdc_get_citation("https://catalogue.data.gov.bc.ca/dataset/bec-map/resource/46ceb84a-3f6d-436c-b4c1-c89beb72d11a")
+
+
 
 
 #...........................................................
