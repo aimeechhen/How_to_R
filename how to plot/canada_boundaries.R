@@ -1,6 +1,16 @@
 
+library(canadianmaps)
+library(tidyverse)
+library(sf)
 
 
+library(canadianmaps)
+canada <- st_as_sf(PROV) %>%  # convert to spatial features (sf) object
+  st_geometry() # extract boundaries only
+
+bc_shape <- st_as_sf(PROV) %>%  # convert to spatial features (sf) object
+  filter(PRENAME == 'British Columbia') %>% # filter to BC only
+  st_geometry() # extract boundaries only
 
 
 #.........................................................
@@ -22,9 +32,6 @@ bc_wintri <- project(bc, crs_wintri)
 
 # plot bc
 plot(bc)
-
-
-
 
 #..............................................................
 # Base R: canada + us ----
@@ -52,3 +59,6 @@ CanUS <- rbind(states, provinces)
 plot(CanUS, xlim = c(-180, -50), border = "darkgrey", col = "grey")
 plot(CanUS[CanUS$NAME_1 %in% "British Columbia", ], border="black", 
      col="white", add=TRUE)
+
+
+
