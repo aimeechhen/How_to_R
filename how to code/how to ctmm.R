@@ -54,7 +54,7 @@ converted_time
 # check to see if the units are all the same
 summary_outputs <- data.frame()
 for (i in seq_along(FITS)) {
-  summary <- summary(FITS[[i]])$CI
+  summary <- summary(FITS[[i]], units = FALSE)$CI # using SI units
   summary_outputs <- rbind(summary_outputs, 
                            data.frame(Var1 = names(table(rownames(summary))), 
                                       Freq = as.integer(table(rownames(summary)))))
@@ -68,3 +68,8 @@ summary_outputs
 summary_outputs <- rbind(summary_outputs, 
                          data.frame(Var1 = rownames(summary[grepl("velocity", rownames(summary)), ]), 
                                     Freq = as.integer(table(rownames(summary[grepl("velocity", rownames(summary)), ])))))
+
+
+# use meta() when trying to get information on a population level or two individuals to know them as a group
+# use summary()$CI or whatever if you want to look at individuals only
+# if youre trying to find the mean of a year for example, go with meta
