@@ -3,8 +3,6 @@
 
 
 
-
-
 #........................................................................
 # Base R (world+canada+bc) ----
 #........................................................................
@@ -62,3 +60,10 @@ plot(provinces_wintri[provinces_wintri$NAME_1 %in% "British Columbia", ], border
 dev.off()
 
 
+
+
+# world map
+data(countriesLow)
+data(countriesCoarse)
+plot(countriesLow)
+plot(countriesCoarse)
