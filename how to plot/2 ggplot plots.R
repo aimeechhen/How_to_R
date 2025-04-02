@@ -1,5 +1,6 @@
 
 library(ggplot2)
+library(geomtextpath) # curve text in plots
 library(gridExtra) # Multi-panel plotting
 library(khroma) # Colour palette that contains colour blind friendly colours, khroma palette -> https://cran.r-project.org/web/packages/khroma/vignettes/tol.html
 muted <- colour("muted")
@@ -26,23 +27,26 @@ ggplot(data = subset(dat2, dist_to_fire_km < 20)) +
 linewidth = 1.5 # line thickness
 linetype = "dashed", "solid" #etc changes the line style
 size = ifelse(year == 2023, 3, 1) # if you want to only change size of the points for one specific year/condition etc
-# note: if you dont want a legend associated with the size of points, include this
-guides(size = "none")
 
 geom_bar(stat = "identity", position = "stack", fill = "red")
 geom_hline(yintercept = 1, col = "grey70", linetype = "dashed") # add a horizontal line
 geom_vline(xintercept = as.Date('2020-03-31'), color = "black", linewidth = 1, linetype = 2) + # start of covid
-  
-  geom_sf(data= cathedral, fill = NA, size = 1.5) +
-  geom_sf(data = goes, color = "purple", fill = NA, size = 1.5) +
-  
+
+
+geom_sf(data= shapefile, fill = NA, size = 1.5) +
+geom_sf(data = df, color = "purple", fill = NA, size = 1.5) +
+
+library(tidyterra)
+geom_spatraster(data = x) # spatraster objects
+geom_spatraster_rgb(data = basemaptile) # spatraster object as images
+geom_spat_contour() # spatraster contours
   
  
   
   
   
-  #__________________________________________________________________________
-  # ggplot scale ----
+#__________________________________________________________________________
+# ggplot scale ----
 
 # date label codes
 # month as MMM = %b
@@ -100,7 +104,6 @@ scale_color_manual(name = "Date", values = rainbow(length(unique(fire_data$date)
 scale_colour_hue()
 
 
-
 library(RColorBrewer)
 # _brewer categorical variable
 # _distiller to create a continuous color bar in the legend
@@ -139,6 +142,7 @@ theme_minimal()
 theme_classic() #does not include gridlines by default
 theme_bw()
 theme_void() #Set a completely blank theme, to get rid of all background and axis elements
+
 theme(
   # plot panel ----
   panel.grid.major = element_blank(), #removes horizontal gridlines
@@ -157,6 +161,7 @@ theme(
     labs(tag = "x") + # tag = "x", used with ggtitle() to have additional labels
   
   # legend ----
+  # change the size of elements
   legend.position = c(0.5, 1.05), #manually set legend center and above plot (horizontal, vertical)
   legend.position = c(0.8, 0.9), #manually set position (horizontal, vertical)
   legend.position = "top",
@@ -164,21 +169,21 @@ theme(
   legend.justification = "center",
   legend.position="none", #removes legend
   legend.title = element_text(hjust = 0) # Lower the title closer to the legend items
+  legend.text = element_text(size=10)
+  legend.text = element_text(size=6, family = "sans", face = "bold"),
+  legend.title = element_blank(),  # remove legend title
+  legend.background = element_rect(fill = "transparent"),
+  legend.key=element_blank(),
+  legend.key.size = unit(1, 'cm'), #change legend key size
+  legend.key.height = unit(1, 'cm'), #change legend key height
+  legend.key.width = unit(1, 'cm'), #change legend key width
   legend.margin = margin(t = -5))  # Reduce margin at the top
   guides(color = guide_legend(nrow = 1)) # put the legend in one row
-  
-
-  legend.title = element_blank(),  # remove legend title
   guides(linetype = "none") # removes the (often) second legend
-  legend.text = element_text(size=6, family = "sans", face = "bold"),
-  legend.key.height = unit(0.3, "cm"),
-  legend.key=element_blank(),
-  legend.background = element_rect(fill = "transparent"),
-  #modify legend
-  labs(fill = "Elevation (m)") #title
   guides(fill=guide_legend(title="New Legend Title"))
   guides(col = guide_colourbar(title = "Some title"))
-  
+  guides(color = guide_legend(override.aes = list(linewidth = 2))) # manually set the line width
+  guides(size = "none") # note: if you dont want a legend associated with the size of points
   
   
   # change the panel background colour and transparency ----
