@@ -30,7 +30,8 @@ ca_albers <- "EPSG:102001"
 
 
 # WGS 84 /
-"+proj=longlat +datum=WGS84"
+lat_long <- "+proj=longlat +datum=WGS84"
+"+init=epsg:4326"
 crs('EPSG:4326')
 lat_long <-  "EPSG:4326"
 
