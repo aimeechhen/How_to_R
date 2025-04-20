@@ -26,12 +26,6 @@ goat_data <- goat_data[!(goat_data$date <= "2019-06-23"),]
 #combine two datasets and not including a certain condition via filter() using dplyr package
 goat_data <- left_join(goat_data, filter(goat_info, goat_id != "CA03"), by = "collar_id")
 
-grepl() # select objects that contains certain text
-hr.shp <- combined_sf[grepl("95% est", combined_sf$name), ]
-strictosidine <- dat[grepl("strictosidine", dat$ann_cro_2, ignore.case = TRUE), ]
-tau_p <- summary[grepl("position", rownames(summary)),] # extract the row with the rowname that contains the text string
-# some are in hours and mostly in days, so convert the ones with hour units into day units (i.e. 24 hours)
-tau_p[grep("hours", rownames(tau_p)), ] <- tau_p[grep("hours", rownames(tau_p)), ] / 24
 
 rownames()
 df$column <- rownames(df) #extract rownames into column
@@ -42,16 +36,29 @@ colnames(mw.dat)[colnames(mw.dat) == 'Time'] <- 'timestamp' ##rename column, mor
 # store models/UDs in a list, name the entry based on goat name and subset window start date, not the times[i] as that is in unix format (this is for a for loop)
 fits[[paste0(DATA@info[1], "_", as.character(WINDOW_START))]] <- FITS
 
-
 # Compare two columns
 head(df[, c("a", "b")])
-
 
 # create a dataframe -> Combine the lists into a dataframe and set the column names to match
 df <- setNames(as.data.frame(do.call(cbind, list(goat_name, window_start, window_end, n_fixes, mean_elev, mean_dist_escape))), 
                        c("goat_name", "window_start", "window_end", "n_fixes", "mean_elev", "mean_dist_escape"))
 # without having to manually rename the columns -> combine into a tibble then convert into a dataframe
 df <- as.data.frame(tibble(goat_name, window_start, window_end, n_fixes, mean_elev, mean_dist_escape))
+
+# Combine the results into a data frame 
+df <- data.frame(matrix(unlist(results), ncol=length(results), byrow=TRUE))
+
+
+# create object if it doesn't exist then do something -> example if raster doesn't exist, then create an empty raster and set values to 0
+if (!exists("first_ignition_time")) {
+  first_ignition_time <- raster_perimeter
+  values(first_ignition_time) <- 0  # Set initial values to 0
+}
+
+fire_cell <- which(values(raster_perimeter) == 1)
+
+print(range(values(r))) # for raster
+print(range(as.vector(m))  )  # for matrix
 
 
 # remove unnecessary characters ("[", " ", etc.) and replace with "_", useful for cleaning column names
@@ -60,41 +67,73 @@ janitor::clean_names()
 # combine two dataframes and match the same column names together and whatever columns are missing, they are just added and given NA values
 combined_df <- bind_rows(df1, df2)
 
+#..................................................
+# Expressions, character strings etc ----
+#..................................................
+
+
+grepl() # select objects that contains certain text
+# Examplse:
+hr.shp <- combined_sf[grepl("95% est", combined_sf$name), ]
+strictosidine <- dat[grepl("strictosidine", dat$ann_cro_2, ignore.case = TRUE), ]
+tau_p <- summary[grepl("position", rownames(summary)),] # extract the row with the rowname that contains the text string
+# some are in hours and mostly in days, so convert the ones with hour units into day units (i.e. 24 hours)
+tau_p[grep("hours", rownames(tau_p)), ] <- tau_p[grep("hours", rownames(tau_p)), ] / 24
+
+# searches for string of text and extract information from 'individual.local.identifier' column and puts a string of text into a new column based on those conditions
+rsf_coeff$season <- NA
+rsf_coeff[grepl("spring", rsf_coeff$individual.local.identifier),"season"] <- "spring"
+rsf_coeff[grepl("summer", rsf_coeff$individual.local.identifier),"season"] <- "summer"
+
+
 library(stringr)
 str_detect() # select objects that contains certain text
 hr95.shp <- hr.shp[str_detect(hr.shp$name, "est"),]
 
 
+#......................................................................
+## How to extract text ----
 
-# For Reo
-# i want to take values from other columns (i.e X.1, X.2) and move them into Ret.time and AuC column while keeping the same tissue type
-# then repeat this for every row
+#extract filename from filepath
+id_full <- "NOAA/GOES/18/FDCF/2023233000020400000"
+id_portion <- basename(id_full)
 
-# Create a new empty data frame
-new_dat <- data.frame(Tissue = character(), 
-                      Ret.time = numeric(), 
-                      AuC = numeric(), 
-                      stringsAsFactors = FALSE)
-# Loop through all rows in dat
-for (i in 1:nrow(dat)) {
-  # Add first row
-  new_dat <- rbind(new_dat, data.frame(Tissue = dat$Tissue[i], 
-                                       Ret.time = dat$Ret.time[i], 
-                                       AuC = dat$AuC[i]))
-    # Add rows for X.1 and X.2 and extract those values into a new dataframe and bind it
-  new_dat <- rbind(new_dat, data.frame(Tissue = dat$Tissue[i], 
-                                       Ret.time = ifelse(!is.na(dat$X.1[i]), dat$X.1[i], NA), 
-                                       AuC = ifelse(!is.na(dat$X.2[i]), dat$X.2[i], NA)))
-    # Add rows for X.4 and X.5 and extract those values into a new dataframe and bind it
-  new_dat <- rbind(new_dat, data.frame(Tissue = dat$Tissue[i], 
-                                       Ret.time = ifelse(!is.na(dat$X.4[i]), dat$X.4[i], NA), 
-                                       AuC = ifelse(!is.na(dat$X.5[i]), dat$X.5[i], NA)))
-}
+#extract text before the first _ underscore (i.e. season)
+dat.hr$season <- sub("^(.*?)_.*", "\\1", dat.hr$individual.local.identifier)
+#extract text after the first _ underscore and before the second _ underscore (i.e. period)
+dat.hr$period <- sub("^[^_]*_(.*?)_.*", "\\1", dat.hr$individual.local.identifier)
+#extract text after the second _ underscore (i.e. collar_id)
+dat.hr$collar_id <- sub("^(?:[^_]*_){2}(.*)", "\\1", dat.hr$individual.local.identifier)
+# extract the goat name from individual.local.identifier, i.e. drop the "_year" portion
+HR_size$goat_name <- gsub("_[0-9]{4}$", "", HR_size$individual.local.identifier)
+# extract the year, i.e. last 4 digits after the _
+HR_size$year <- gsub(".*_([0-9]{4})$", "\\1", HR_size$individual.local.identifier)
 
 
 
 
-#...................................................................
+
+#//////////////////////////////////////////////////////////////////
+
+
+# check data type of covariates
+datatype(elev) #FLT4S: 32-bit float (single precision) .-. numerical
+#inspect values and check range of value
+range(values(elev), na.rm = TRUE)
+
+
+# check if all rows have the same values between two columns, ensure both are the same object type
+identical(df$col1, df$col2)
+# identify which rows are not matching
+which(df$col1 != df$col2)
+
+
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////
 # Temporal attributes ----
 library(lubridate)
 
@@ -118,105 +157,23 @@ df$timestamp <- as.POSIXct(paste(df$date, df$time), format = "%Y-%m-%d %H:%M:%S"
 # convert timezone
 df$timestamp <- with_tz(df$timestamp, tzone = "America/Los_Angeles")
 
+# modifying the year of the timestamp and put it in a new column
+df$timestamp_2021 <- df$timestamp
+year(df$timestamp_2021) <- 2021
+
 # Lubridate package
 time_window <- hours(1)  # Using lubridate, note this comes out as a 'period' object
 
 
-
-#...............................................
-# for loops ----
-for (i in 1:nrow(x)) {
-perimeter <- x[i,]
-}
-
-# to indicate you only want to loop through rows 1-8 because of this df[i,] where i in located in rows
-for (i in 1:8) {
-  # extract perimeter for the current row
-  perimeter <- df[i,]
-}
-
-
-# Combine the results into a data frame 
-df <- data.frame(matrix(unlist(results), ncol=length(results), byrow=TRUE))
-
-
-# create object if it doesn't exist then do something
-# example if raster doesn't exist, then create an empty raster and set values to 0
-if (!exists("first_ignition_time")) {
-  first_ignition_time <- raster_perimeter
-  values(first_ignition_time) <- 0  # Set initial values to 0
-}
-
-fire_cell <- which(values(raster_perimeter) == 1)
-
-print(range(values(r))) # for raster
-print(range(as.vector(m))  )  # for matrix
-
-
-# How to extract text ----
-
-#extract filename from filepath
-id_full <- "NOAA/GOES/18/FDCF/2023233000020400000"
-id_portion <- basename(id_full)
-
-#extract text before the first _ underscore (i.e. season)
-dat.hr$season <- sub("^(.*?)_.*", "\\1", dat.hr$individual.local.identifier)
-#extract text after the first _ underscore and before the second _ underscore (i.e. period)
-dat.hr$period <- sub("^[^_]*_(.*?)_.*", "\\1", dat.hr$individual.local.identifier)
-#extract text after the second _ underscore (i.e. collar_id)
-dat.hr$collar_id <- sub("^(?:[^_]*_){2}(.*)", "\\1", dat.hr$individual.local.identifier)
-# extract the goat name from individual.local.identifier, i.e. drop the "_year" portion
-HR_size$goat_name <- gsub("_[0-9]{4}$", "", HR_size$individual.local.identifier)
-# extract the year, i.e. last 4 digits after the _
-HR_size$year <- gsub(".*_([0-9]{4})$", "\\1", HR_size$individual.local.identifier)
-
-
-# searches for string of text and extract information from 'individual.local.identifier' column and puts a string of text into a new column based on those conditions
-rsf_coeff$season <- NA
-rsf_coeff[grepl("spring", rsf_coeff$individual.local.identifier),"season"] <- "spring"
-rsf_coeff[grepl("summer", rsf_coeff$individual.local.identifier),"season"] <- "summer"
+dt = 1 %#% 'day' # '%#%' ctmm package feature -> This converts it into days (si units), you can replace day with another unit
 
 
 
 
 
-#_________________________________________________________________________
-
-# saving files ----
-## csv ----
-# save as csv if you are planning to view the file outside of R, for easy access without having to open and load the file/data
-write.csv(x, file = "./path/to/folder/file.csv")
-x <- read.csv(file = "./path/to/folder/file.csv")
+#//////////////////////////////////////////////////////////////////
 
 
-#.........................................................
-# rda 
-# useful if you dont want to import the file and assign it to an object, it is read in and assigned to the object text string when you originally saved it
-save(x, file = "./path/to/folder/file.rda")
-load(file = "./path/to/folder/file.rda") # this will load into the environment as 'x'
-
-#.........................................................
-# rds
-# if you are importing it in and needing to assign it to different object names depending on the scenario the file/data is being used
-saveRDS(x, file = file = "./path/to/folder/file.rds")
-whale <- readRDS(file = "./path/to/folder/file.rds") # object cannot be x as there might already be something named x in the environment, or it might be whale for one script and marine for another script
-
-#.........................................................
-## Save outputs into a textfile ----
-
-sink() # export and save output of function, requires to terminate exportation process once completed 
-
-
-
-#export and save summary output to a textfile
-sink("data/home_range/m_hr_spring_summary.txt")
-print(summary(m_hr_spring))
-cat("\n") #enter blank line
-# calculate the CI values
-print("CI Values (lower, upper)")
-# est + upper & lower z-score * std err
-print(-0.1105 + c(-1.96,1.96) * 0.1670)
-sink() #terminate output exporting connection/process (multiple functions can be exported)
 
 
 
@@ -234,19 +191,49 @@ newd <- expand_grid(
   Chick = 'new chick') # since we are using random effects
 
 
-dt = 1 %#% 'day' # '%#%' This converts it into days (si units), you can replace day with another unit
 
 
 
 
-# check data type of covariates
-datatype(elev) #FLT4S: 32-bit float (single precision) .-. numerical
-#inspect values and check range of value
-range(values(elev), na.rm = TRUE)
+
+#//////////////////////////////////////////////////////////////////
+# for loops ----
+for (i in 1:nrow(x)) {
+  perimeter <- x[i,]
+}
+
+# to indicate you only want to loop through rows 1-8 because of this df[i,] where i in located in rows
+for (i in 1:8) {
+  # extract perimeter for the current row
+  perimeter <- df[i,]
+}
 
 
 
-# check if all rows have the same values between two columns, ensure both are the same object type
-identical(df$col1, df$col2)
-# identify which rows are not matching
-which(df$col1 != df$col2)
+
+
+
+# For Reo ----
+# i want to take values from other columns (i.e X.1, X.2) and move them into Ret.time and AuC column while keeping the same tissue type
+# then repeat this for every row
+
+# Create a new empty data frame
+new_dat <- data.frame(Tissue = character(), 
+                      Ret.time = numeric(), 
+                      AuC = numeric(), 
+                      stringsAsFactors = FALSE)
+# Loop through all rows in dat
+for (i in 1:nrow(dat)) {
+  # Add first row
+  new_dat <- rbind(new_dat, data.frame(Tissue = dat$Tissue[i], 
+                                       Ret.time = dat$Ret.time[i], 
+                                       AuC = dat$AuC[i]))
+  # Add rows for X.1 and X.2 and extract those values into a new dataframe and bind it
+  new_dat <- rbind(new_dat, data.frame(Tissue = dat$Tissue[i], 
+                                       Ret.time = ifelse(!is.na(dat$X.1[i]), dat$X.1[i], NA), 
+                                       AuC = ifelse(!is.na(dat$X.2[i]), dat$X.2[i], NA)))
+  # Add rows for X.4 and X.5 and extract those values into a new dataframe and bind it
+  new_dat <- rbind(new_dat, data.frame(Tissue = dat$Tissue[i], 
+                                       Ret.time = ifelse(!is.na(dat$X.4[i]), dat$X.4[i], NA), 
+                                       AuC = ifelse(!is.na(dat$X.5[i]), dat$X.5[i], NA)))
+}
