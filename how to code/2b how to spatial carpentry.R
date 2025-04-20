@@ -197,3 +197,12 @@ aoi_bbox <- as.numeric(st_bbox(area_of_interest)[c("xmin", "xmax", "ymin", "ymax
 
 plot(area_of_interest)
 plot(cathedral, add = TRUE)
+
+
+
+
+# draw around a bunch of points to create a polygon
+hull <- data %>%
+  st_as_sf(coords = c("longitude", "latitude"), crs = 3005) %>%
+  summarize(geometry = st_union(geometry)) %>%
+  st_convex_hull()
