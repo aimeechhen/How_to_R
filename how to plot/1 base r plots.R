@@ -47,7 +47,7 @@ title("C", adj = 0)
 # yaxis: side = 2
 axis(side = 2, at = seq(0,9000,by = 1000)) #manually add axis tick labels 
 axis(side = 2, las = 2) # Rotate the axis labels (title).
-legend(legend = c("uncorrelated drift and diffusion", "uncorrelated drift and correlated diffusion"))
+legend("topleft", legend = c("label 1", "label 2))
 abline(0,0, col = "red") 
 
 #add another layer to the plot
