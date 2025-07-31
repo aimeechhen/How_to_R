@@ -1,5 +1,6 @@
 
 library(ggplot2)
+library(tidyterra) # for spatial data such as rasters
 library(geomtextpath) # curve text in plots
 library(gridExtra) # Multi-panel plotting
 library(khroma) # Colour palette that contains colour blind friendly colours, khroma palette -> https://cran.r-project.org/web/packages/khroma/vignettes/tol.html
@@ -37,7 +38,7 @@ geom_sf(data= shapefile, fill = NA, size = 1.5) +
 geom_sf(data = df, color = "purple", fill = NA, size = 1.5) +
 
 library(tidyterra)
-geom_spatraster(data = x) # spatraster objects
+geom_spatraster(data = x, show.legend = FALSE) # spatraster objects
 geom_spatraster_rgb(data = basemaptile) # spatraster object as images
 geom_spat_contour() # spatraster contours
   
@@ -46,7 +47,7 @@ geom_spat_contour() # spatraster contours
   
   
 #__________________________________________________________________________
-# ggplot scale ----
+# scale ----
 
 # date label codes
 # month as MMM = %b
@@ -87,10 +88,14 @@ scale_y_log10(expand = c(0,0.1))
 scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
              date_labels = "%b")
 scale_x_date(date_breaks = "1 month", date_labels = "%m-%y") +
+
+
+  
+  
   
   
   #..................................................................................
-  # colours ----
+  ## scale colours ----
 
 guides(shape = FALSE, alpha = FALSE)        #remove legends for shape and alpha
 
@@ -130,7 +135,11 @@ scale_color_viridis_d() # categorical variable for discrete color legends
 scale_color_viridis_c() #to generate continuous color bar
 scale_color_viridis_b() # to create binned (stepwise) color scale
 
-
+##scale spatial ----
+scale_fill_terrain_b() + # binning continuous values
+  scale_fill_terrain_c() + # continuous values
+  scale_fill_terrain_d() + # discrete values
+  
 
 
 #__________________________________________________________________________
@@ -144,11 +153,11 @@ theme_bw()
 theme_void() #Set a completely blank theme, to get rid of all background and axis elements
 
 theme(
-  # plot panel ----
+  ## plot panel ----
   panel.grid.major = element_blank(), #removes horizontal gridlines
   panel.grid.minor = element_blank(), #removes vertical gridlines
   
-  # axes ----
+  ## axes ----
   axis.title.y = element_text(size=10, family = "sans", face = "bold"),
   axis.title.x = element_text(size=10, family = "sans", face = "bold"),
   axis.text.y = element_text(size=8, family = "sans"),
@@ -156,11 +165,11 @@ theme(
   axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), # vertical labels
   axis.ticks = element_blank(),
   
-  # labels, titles ----
+  ## labels, titles ----
   ggtitle("A)") + 
     labs(tag = "x") + # tag = "x", used with ggtitle() to have additional labels
   
-  # legend ----
+  ## legend ----
   # change the size of elements
   legend.position = c(0.5, 1.05), #manually set legend center and above plot (horizontal, vertical)
   legend.position = c(0.8, 0.9), #manually set position (horizontal, vertical)
@@ -186,13 +195,14 @@ theme(
   guides(size = "none") # note: if you dont want a legend associated with the size of points
   
   
-  # change the panel background colour and transparency ----
+  ## panel background colour and transparency ----
   panel.background = element_rect(scales::alpha("#005f73", 0.6)),
   panel.background = element_rect(fill = "transparent"),
   panel.border = element_blank(), #plot boundary
   aspect.ratio = 1, # sets the ratio of height and width of the panel to be the same
   aspect.ratio = 2,  #  height 2x the width
   
+
   plot.title = element_text(hjust = 0.5, size = 14, family = "sans", face = "bold"), #center title
   plot.title = element_text(size = 12, family = "sans", face = "bold"),
   plot.tag = element_text(size = 16, family = "sans", face = "bold"), # used with labs(tag = "x")
@@ -239,9 +249,12 @@ ggplot() +
 
 #...............................................
 #gridExtra package ----
+library(gridExtra)
 plot <- grid.arrange(plot1, plot2,
-                     ncol=2)
+                     ncol=2,
+                     top = textGrob()) #add a plot title
 
+grid.text() # add a title to the multipanel plot
 
 
 #__________________________________________________________________________
