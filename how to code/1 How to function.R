@@ -3,10 +3,32 @@
 #put a solid black line, you can change the "#px" to change the size eg. 5px for R Markdown
 <div style="border-bottom: 3px solid black;"></div>
 
-
-
-excel_sheets(file) # list all the sheet names in the excel file
+# how to compare scripts for differences
+library(diffr)
+# will open in Viewer to display side by side
+diffr("filename1", "filename2")
   
+  
+excel_sheets(file) # list all the sheet names in the excel file
+
+#____________________________________________________________
+# object/element types ----
+
+names(x)
+slotNames(x) # slot objects (s4)
+str(x) # structure of object
+class(x) # object type
+head(x) # beginning of df
+tail(x) # end of the df
+
+
+
+
+
+
+
+
+
 
 #_________________________________________________________________________
 # Data wrangling ----
@@ -67,6 +89,9 @@ janitor::clean_names()
 # combine two dataframes and match the same column names together and whatever columns are missing, they are just added and given NA values
 combined_df <- bind_rows(df1, df2)
 
+# combine two df by rownames (i.e. adding columns of df2 to df1 and matching based on row names)
+merge(df1, df2, by = 0, all.x = TRUE)
+
 #..................................................
 # Expressions, character strings etc ----
 #..................................................
@@ -74,21 +99,21 @@ combined_df <- bind_rows(df1, df2)
 
 grepl() # select objects that contains certain text
 # Examplse:
-hr.shp <- combined_sf[grepl("95% est", combined_sf$name), ]
-strictosidine <- dat[grepl("strictosidine", dat$ann_cro_2, ignore.case = TRUE), ]
+df <- combined_sf[grepl("95% est", combined_sf$name), ]
+strictosidine <- df[grepl("strictosidine", df$ann_cro_2, ignore.case = TRUE), ]
 tau_p <- summary[grepl("position", rownames(summary)),] # extract the row with the rowname that contains the text string
 # some are in hours and mostly in days, so convert the ones with hour units into day units (i.e. 24 hours)
 tau_p[grep("hours", rownames(tau_p)), ] <- tau_p[grep("hours", rownames(tau_p)), ] / 24
 
 # searches for string of text and extract information from 'individual.local.identifier' column and puts a string of text into a new column based on those conditions
-rsf_coeff$season <- NA
-rsf_coeff[grepl("spring", rsf_coeff$individual.local.identifier),"season"] <- "spring"
-rsf_coeff[grepl("summer", rsf_coeff$individual.local.identifier),"season"] <- "summer"
+df$season <- NA
+df[grepl("spring", df$individual.local.identifier),"season"] <- "spring"
+df[grepl("summer", df$individual.local.identifier),"season"] <- "summer"
 
 
 library(stringr)
 str_detect() # select objects that contains certain text
-hr95.shp <- hr.shp[str_detect(hr.shp$name, "est"),]
+hr95.shp <- df[str_detect(df$name, "est"),]
 
 
 #......................................................................
@@ -99,15 +124,36 @@ id_full <- "NOAA/GOES/18/FDCF/2023233000020400000"
 id_portion <- basename(id_full)
 
 #extract text before the first _ underscore (i.e. season)
-dat.hr$season <- sub("^(.*?)_.*", "\\1", dat.hr$individual.local.identifier)
+df$season <- sub("^(.*?)_.*", "\\1", df$individual.local.identifier)
 #extract text after the first _ underscore and before the second _ underscore (i.e. period)
-dat.hr$period <- sub("^[^_]*_(.*?)_.*", "\\1", dat.hr$individual.local.identifier)
+df$period <- sub("^[^_]*_(.*?)_.*", "\\1", df$individual.local.identifier)
 #extract text after the second _ underscore (i.e. collar_id)
-dat.hr$collar_id <- sub("^(?:[^_]*_){2}(.*)", "\\1", dat.hr$individual.local.identifier)
+df$collar_id <- sub("^(?:[^_]*_){2}(.*)", "\\1", df$individual.local.identifier)
 # extract the goat name from individual.local.identifier, i.e. drop the "_year" portion
-HR_size$goat_name <- gsub("_[0-9]{4}$", "", HR_size$individual.local.identifier)
+df$goat_name <- gsub("_[0-9]{4}$", "", df$individual.local.identifier)
 # extract the year, i.e. last 4 digits after the _
-HR_size$year <- gsub(".*_([0-9]{4})$", "\\1", HR_size$individual.local.identifier)
+df$year <- gsub(".*_([0-9]{4})$", "\\1", df$individual.local.identifier)
+
+# trying to get all the names of an object via copy and paste so you don't have to manually type it out and remove all the trailing spaces so you dont have to manually backspace or delete either
+cat(paste0('"', (sub("[ \t]+$", "", names(x))), '",\n'))
+# then copy and paste from the console to your script and just delete all the space in front at once (ctrl + alt + down arrow) via multi-line select
+
+
+#......................................................................
+# how to print messages ----
+#......................................................................
+
+library(crayon) # to change message colours
+
+# print a message every 2000 iterations to track progress
+if (j %% 2000 == 0) {
+  cat("Completed", j, "iterations\n")
+}
+
+
+
+
+
 
 
 
@@ -126,10 +172,24 @@ range(values(elev), na.rm = TRUE)
 identical(df$col1, df$col2)
 # identify which rows are not matching
 which(df$col1 != df$col2)
+# comparing df to see if they are the same or not
+df1[which(rowSums(df1 != df2) > 0), ] #the > 0 means any differences in the rows that is greater than 0 i.e. none or no differences, set to = if you want to see no differences
 
 
+# check for duplicates, which rows have the same values in the columns
+df[which(duplicated(df[ , c("x_", "y_", "t_")])), ]
+# check for duplicates which rows that are duplicated (the | is to check in both direction, i.e., includes the row and the matching row -> if a was matched with c then a gets included in the print out not just c, and vice versa, if z gets matched with x)
+df[which(duplicated(df[, c("x_", "y_", "t_")]) | duplicated(df[, c("x_", "y_", "t_")], fromLast = TRUE)), ]
 
+# checks to see if a row has the same value as the row before it
+which(diff(df$x) == 0)
 
+# to figure out what caused the warning message when fitting model
+diagnose(model)
+
+# check for NA or Inf infinite values
+sapply(df, function(x) sum(is.na(x))) # checking across all columns
+sapply(df, function(x) sum(is.infinite(x))) # checking across all columns
 
 
 
