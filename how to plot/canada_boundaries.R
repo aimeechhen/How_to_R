@@ -23,9 +23,15 @@ crs_wintri <- "ESRI:53018"
 
 #download boundaries
 provinces <- gadm(country="Canada", level=1, path = tempdir()) #include provinces border
+regions <- gadm(country="Canada", level=2, path = tempdir())
 
 #subset to bc boundaries
 bc <- provinces[provinces$NAME_1 %in% "British Columbia", ]
+bc <- regions[regions$NAME_1 %in% "British Columbia", ]
+#list all the regions
+unique(bc$NAME_2)
+#subset to specific region
+ok <- bc[bc$NAME_2 == "Okanagan-Similkameen",]
 
 #reproject
 bc_wintri <- project(bc, crs_wintri)
