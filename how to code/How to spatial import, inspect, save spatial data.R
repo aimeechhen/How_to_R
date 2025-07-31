@@ -39,11 +39,21 @@ st_write(shp_file, dsn = 'data/shapefile',
 # import gpx file
 gps_data <- st_read("data/gps_data.gpx")
 # inspect layers
+st_layers("data/gps_data.gpx")
 st_layers(gps_data)
 #import gps data using the "track_points" layer
 gps_data <- st_read("data/gps_data.gpx", layer = 'track_points', quiet = TRUE)
 #save gpx file
 
+#Multiple gpx files
+# Set the folder path
+dir_path <- "./data/collar_data/raw_collar/"
+# Load .shp, .tif etc files within a folder including all the subfolders
+gpx_files <- list.files(dir_path, pattern = "\\.gpx$", full.names = TRUE)
+# Import/read all the files into a list, specifying the layer
+gpx_list <- lapply(gpx_files, function(file) st_read(file, layer = "track_points"))
+# combine together as one list
+gpx_data <- do.call(c, gpx_list)
 
 
 
