@@ -2,6 +2,9 @@
 
 library(leaflet)
 
+# customize markers
+# https://rstudio.github.io/leaflet/articles/markers.html
+
 library(leaflet.extras)
 
 #Basemap using map tiles (OpenStreetMap tiles used by default)
@@ -27,7 +30,7 @@ map <- leaflet() %>%
 #~~~~~~~~~~~~~~~~~~~~~
 # create a basemap with leaflet() and add different provider tiles and a layers control so that users can switch between the different tiles
 # add different provider tiles
-basemap <- 
+# basemap <- 
   leaflet() %>%
   addProviderTiles("OpenStreetMap", group = "OpenStreetMap") %>%
   addProviderTiles("Esri.WorldStreetMap", group = "Esri.WorldStreetMap") %>%
@@ -47,10 +50,10 @@ basemap <-
     "Esri.WorldStreetMap", "Esri.WorldTopoMap","Esri.WorldImagery",  "Esri.WorldTerrain", "Esri.OceanBasemap", "Esri.NatGeoWorldMap",
     "CartoDB.Positron", "CartoDB.DarkMatter", 
     "USGS.USTopo", "USGS.USImagery", "USGS.USImageryTopo"),
-    position = "topleft") %>% 
+    position = "topleft") #%>% 
   #~~~~~~~~~~~~~~~~~~~~~
   
-  addControl() #Add arbitrary HTML controls to the map
+addControl() #Add arbitrary HTML controls to the map
 addTiles()  #Add a tile layer to the map
 addWMSTiles()  #Add a WMS tile layer to the map
 addPopups()  #Add popups to the map
@@ -374,3 +377,33 @@ m %>%   #add ggplot to leaflet basemap
 
 
 
+
+library(leaflet)
+library(sf)
+library(mapview)
+dat <- read.csv("C:/Users/windows95/Downloads/sample locations.csv")
+dat <- janitor::clean_names(dat)
+
+# Function to convert DMM to decimal degrees
+convert_to_decimal <- function(coord, is_longitude = FALSE) {
+  parts <- as.numeric(unlist(strsplit(coord, " ")))
+  decimal <- parts[1] + parts[2] / 60
+  if (is_longitude) decimal <- -decimal  # Western longitude should be negative
+  return(decimal)
+}
+
+# Apply conversion
+dat$latitude <- sapply(dat$latitude_n, convert_to_decimal)
+dat$longitude <- sapply(dat$longitude_w, convert_to_decimal, is_longitude = TRUE)
+
+# View result
+print(dat[, c("latitude", "longitude")])
+
+dat <- na.omit(dat)
+
+m <-
+leaflet(dat) %>%
+    addTiles() %>%
+    addCircles(lng = ~longitude, lat = ~latitude, radius = 2)
+  
+mapshot(m, file = "C:/Users/windows95/Downloads/leaflet_map.png")
