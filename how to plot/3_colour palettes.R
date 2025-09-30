@@ -71,6 +71,29 @@ col_palette # print the codes
 
 scales::show_col(col_palette) # visalise palette with hex codes as a plot
 
+#............................................................
+# scico palette ----
+library(scico)
+# https://github.com/thomasp85/scico
+scico_palette_show()
+
+#.............................................................
+# paletteer ----
+library(paletteer)
+# https://r-charts.com/color-palettes/
+
+# continuous https://r-charts.com/color-palettes/#continuous
+# Continuous palettes can generate any number of colors, providing a smooth transition between them
+# set n = , to how many numbers you want
+paletteer_c("ggthemes::Red-Blue-White Diverging", n = 30)
+# discrete https://r-charts.com/color-palettes/#discrete
+# Discrete palettes have a fixed number of colors.
+paletteer_d("colorBlindness::paletteMartin")
+
+# dynamic 
+# Dynamic palettes are a type of discrete palettes which can generate a number of colors by 
+# demand but to a maximum number (8, 12 or 20 colors) depending on each palette.
+paletteer_dynamic("cartography::blue.pal", 20)
 
 #............................................................
 library(khroma) 
