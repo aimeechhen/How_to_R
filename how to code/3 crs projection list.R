@@ -47,6 +47,13 @@ epsg_53018 <- crs("+init=epsg:53018")
 # Project the spatvector object to EPSG:53018
 china_projected <- project(china, epsg_53018)
 
+##..........................................
+# projection in meter units ----
+
+crs_meters <- "EPSG:32610"
+
+
+
 
 
 #........................................
