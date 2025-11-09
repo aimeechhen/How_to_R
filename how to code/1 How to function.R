@@ -138,6 +138,27 @@ df$year <- gsub(".*_([0-9]{4})$", "\\1", df$individual.local.identifier)
 cat(paste0('"', (sub("[ \t]+$", "", names(x))), '",\n'))
 # then copy and paste from the console to your script and just delete all the space in front at once (ctrl + alt + down arrow) via multi-line select
 
+#......................................................................
+## How to replace text across multiple scripts----
+
+# list all the scripts in the folder that you want to edit and all the subfolders
+scripts <- list.files("./path/to/folder", pattern = "\\.R$", recursive = TRUE, full.names = TRUE)
+
+# text youre trying to find and replace
+old_text <- "xyz"
+new_text <- "abc"
+
+# go through all the scripts
+for (file in scripts) {
+  lines <- readLines(file) # read the scripts
+  lines <- gsub(old_text, new_text, lines) # find the text or string and replaces it
+  writeLines(lines, file) #save the editing
+}
+
+
+
+
+
 
 #......................................................................
 # how to print messages ----
