@@ -11,6 +11,7 @@ crs(x) <- crstype
 # BC Albers projection ----
 
 # NAD83 / BC Albers
+# units = meters (see: https://spatialreference.org/ref/epsg/3005/)
 bc_albers <- "ESRI:3005"
 bc_albers <- "EPSG:3005"
 
