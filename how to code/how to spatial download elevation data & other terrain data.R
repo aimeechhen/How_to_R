@@ -24,7 +24,7 @@ elev <- rast("data/habitat/elev.tif")
 
 
 
-library(elevatr)      # to download digital elevation models https://rspatialdata.github.io/elevation.html
+
 #import gps data
 gps <- read.csv("data/gps.csv")
 #Convert gps coordinates to sf object, spatial data points
@@ -35,9 +35,15 @@ st_crs(coord_sf) <- st_crs("+proj=longlat +datum=WGS84")
 bbox <- st_bbox(coord_sf)
 
 
+
+#digital elevation models (DEM)  https://rspatialdata.github.io/elevation.html
+# CopernicusDEM R package uses the same source as elevatr. See https://cran.r-project.org/web/packages/CopernicusDEM/index.html
+library(elevatr) # https://cran.r-project.org/web/packages/elevatr/vignettes/introduction_to_elevatr.html
+# The zoom level determines the resolution of the output raster. 
+# More details on resolution and zoom level is still available in the Mapzen Documentation on ground resolution (https://github.com/tilezen/joerd/blob/master/docs/data-sources.md#what-is-the-ground-resolution). 
+
 #Get elevation raster for the region(s) of interest (units = meters)
 # zoom level 1:14, 14 fine scale -> z = 9-12 ~90m resolution; z = 13-14 ~10-30m resolution
-#https://github.com/tilezen/joerd/blob/master/docs/data-sources.md#what-is-the-ground-resolution
 dem_raster <- get_elev_raster(locations = coord_sf, 
                               z = 9,
                               clip = 'bbox',
