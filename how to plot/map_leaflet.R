@@ -25,6 +25,11 @@ df <- read.csv("data.csv")
 map <- leaflet() %>%
   addTiles()
 
+# list the leaflet providers (this package is external to leaflet, 3rd party, .-. may not be up to date)
+library(leaflet.providers)
+# https://rstudio.github.io/leaflet.providers/
+str(providers_default(), max.level = 2)
+
 
 
 #~~~~~~~~~~~~~~~~~~~~~
