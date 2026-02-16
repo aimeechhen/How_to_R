@@ -30,10 +30,13 @@ folder_path <- "data/rds"
 rds_files <- list.files(folder_path, pattern = "\\.rds$", full.names = TRUE)
 # Import/read all the files into a list
 rds_list <- lapply(rds_files, readRDS)
-# combine together as one list
-rds_dat <- do.call(c, rds_list)
+# combine together as one list OR
+rds_single_list <- do.call(c, rds_list)
+# combine into df
+rds_data <- do.call(rbind, rds_list)
 
-
+# if you want specific files that contain particular text string (i.e., there are other files in the folder and you dont want all of them), ignore.case = TRUE -> not case sensitive
+rds_files <- list.files(folder_path, pattern = ".*text_string.*\\.rds$", full.names = TRUE,  ignore.case = TRUE)
 
 
 #_______________________________________________________
