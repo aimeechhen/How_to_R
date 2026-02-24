@@ -237,6 +237,8 @@ df$timestamp <- as.POSIXct(df$timestamp, format = "%Y.%m.%d %H:%M:%S")
 df$timestamp <- as.POSIXct(paste(df$date, df$time), format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
 # convert timezone
 df$timestamp <- with_tz(df$timestamp, tzone = "America/Los_Angeles")
+# format into HH:MM:SS but no longer will be a posixct (requires date and time) this will become a character object
+df$time <- format(df$timestamp, format = "%H:%M:%S") # turns into character
 
 # modifying the year of the timestamp and put it in a new column
 df$timestamp_2021 <- df$timestamp
