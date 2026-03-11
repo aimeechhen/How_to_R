@@ -20,10 +20,10 @@ bquote('Diffusion (' * m^2 * '/s)') # superscript
 
 # subset data in ggplot
 ggplot(data = subset(dat2, dist_to_fire_km < 20)) +
-
-
-#__________________________________________________________________________
-# GEOM functions ----
+  
+  
+  #__________________________________________________________________________
+  # GEOM functions ----
 
 linewidth = 1.5 # line thickness
 linetype = "dashed", "solid" #etc changes the line style
@@ -32,20 +32,27 @@ size = ifelse(year == 2023, 3, 1) # if you want to only change size of the point
 geom_bar(stat = "identity", position = "stack", fill = "red")
 geom_hline(yintercept = 1, col = "grey70", linetype = "dashed") # add a horizontal line
 geom_vline(xintercept = as.Date('2020-03-31'), color = "black", linewidth = 1, linetype = 2) + # start of covid
-
-
+  
+  
 geom_sf(data= shapefile, fill = NA, size = 1.5) +
 geom_sf(data = df, color = "purple", fill = NA, size = 1.5) +
-
+  
 library(tidyterra)
 geom_spatraster(data = x, show.legend = FALSE) # spatraster objects
 geom_spatraster_rgb(data = basemaptile) # spatraster object as images
 geom_spat_contour() # spatraster contours
-  
- 
-  
-  
-  
+
+
+#__________________________________________________________________
+# graph view/appearance ----
+
+coord_cartesian() # zoom in on the plot
+
+
+
+
+
+
 #__________________________________________________________________________
 # scale ----
 
@@ -87,15 +94,15 @@ scale_y_log10(expand = c(0,0.1))
 
 scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
              date_labels = "%b")
-scale_x_date(date_breaks = "1 month", date_labels = "%m-%y") +
+scale_x_date(date_breaks = "1 month", date_labels = "%m-%y") 
 
 
-  
-  
-  
-  
-  #..................................................................................
-  ## scale colours ----
+
+
+
+
+#..................................................................................
+## scale colours ----
 
 guides(shape = FALSE, alpha = FALSE)        #remove legends for shape and alpha
 
@@ -140,10 +147,10 @@ scale_fill_terrain_b() + # binning continuous values
   scale_fill_terrain_c() + # continuous values
   scale_fill_terrain_d() + # discrete values
   
-
-
-#__________________________________________________________________________
-# ggplot themes ----
+  
+  
+  #__________________________________________________________________________
+  # ggplot themes ----
 
 element_blank() #to remove
 
@@ -168,8 +175,8 @@ theme(
   ## labels, titles ----
   ggtitle("A)") + 
     labs(tag = "x") + # tag = "x", used with ggtitle() to have additional labels
-  
-  ## legend ----
+    
+    ## legend ----
   # change the size of elements
   legend.position = c(0.5, 1.05), #manually set legend center and above plot (horizontal, vertical)
   legend.position = c(0.8, 0.9), #manually set position (horizontal, vertical)
@@ -187,31 +194,31 @@ theme(
   legend.key.height = unit(1, 'cm'), #change legend key height
   legend.key.width = unit(1, 'cm'), #change legend key width
   legend.margin = margin(t = -5))  # Reduce margin at the top
-  guides(color = guide_legend(nrow = 1)) # put the legend in one row
-  guides(linetype = "none") # removes the (often) second legend
-  guides(fill=guide_legend(title="New Legend Title"))
-  guides(col = guide_colourbar(title = "Some title"))
-  guides(color = guide_legend(override.aes = list(linewidth = 2))) # manually set the line width
-  guides(size = "none") # note: if you dont want a legend associated with the size of points
-  
-  
-  ## panel background colour and transparency ----
-  panel.background = element_rect(scales::alpha("#005f73", 0.6)),
-  panel.background = element_rect(fill = "transparent"),
-  panel.border = element_blank(), #plot boundary
-  aspect.ratio = 1, # sets the ratio of height and width of the panel to be the same
-  aspect.ratio = 2,  #  height 2x the width
-  
+guides(color = guide_legend(nrow = 1)) # put the legend in one row
+guides(linetype = "none") # removes the (often) second legend
+guides(fill=guide_legend(title="New Legend Title"))
+guides(col = guide_colourbar(title = "Some title"))
+guides(color = guide_legend(override.aes = list(linewidth = 2))) # manually set the line width
+guides(size = "none") # note: if you dont want a legend associated with the size of points
 
-  plot.title = element_text(hjust = 0.5, size = 14, family = "sans", face = "bold"), #center title
-  plot.title = element_text(size = 12, family = "sans", face = "bold"),
-  plot.tag = element_text(size = 16, family = "sans", face = "bold"), # used with labs(tag = "x")
-  plot.tag.position = c(-0.12, 0.5), # horizontal, vertical
-  plot.background = element_rect(fill = "transparent", color = NA),
-  plot.margin = unit(c(0.2,0.1,0.2,0.2), "cm"), #top, right, bot, left
-  plot.margin = unit(c(0.75,0.5,0.25,0.25), "in"), #top, right, bot, left
-  
-  
+
+## panel background colour and transparency ----
+panel.background = element_rect(scales::alpha("#005f73", 0.6)),
+panel.background = element_rect(fill = "transparent"),
+panel.border = element_blank(), #plot boundary
+aspect.ratio = 1, # sets the ratio of height and width of the panel to be the same
+aspect.ratio = 2,  #  height 2x the width
+
+
+plot.title = element_text(hjust = 0.5, size = 14, family = "sans", face = "bold"), #center title
+plot.title = element_text(size = 12, family = "sans", face = "bold"),
+plot.tag = element_text(size = 16, family = "sans", face = "bold"), # used with labs(tag = "x")
+plot.tag.position = c(-0.12, 0.5), # horizontal, vertical
+plot.background = element_rect(fill = "transparent", color = NA),
+plot.margin = unit(c(0.2,0.1,0.2,0.2), "cm"), #top, right, bot, left
+plot.margin = unit(c(0.75,0.5,0.25,0.25), "in"), #top, right, bot, left
+
+
 )
 
 
@@ -223,9 +230,9 @@ library(ggstar)
 show_starshapes()
 # use geom_star instead of geom_point
 geom_star(aes(starshape=Species, fill=Species), size=2.5) +
-
-#__________________________________________________________________________
-# multi-panel plotting ----
+  
+  #__________________________________________________________________________
+  # multi-panel plotting ----
 
 ## facet wrap ----
 facet_wrap(~ ID,# sort by ID
@@ -279,12 +286,12 @@ ggsave(last_plot(),  file="figures/fig1.png",
 library(gganimate)
 
 labs(title = "{frame_time}") +
-
-enter_fade() +
+  
+  enter_fade() +
   exit_fade() +
-enter_appear() +
+  enter_appear() +
   exit_disappear() +
-transition_time() #transitions are 'travelling' from one tile to the next.
+  transition_time() #transitions are 'travelling' from one tile to the next.
 #prevent the points from lingering or connecting, make them only visible for their time step
 transition_states()
 shadow_mark(past = FALSE, future = FALSE)

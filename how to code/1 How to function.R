@@ -116,6 +116,19 @@ str_detect() # select objects that contains certain text
 hr95.shp <- df[str_detect(df$name, "est"),]
 
 
+
+#......................................................................
+## How to find scripts that contains certain text strings ----
+library(BurStMisc)
+# this will print the script that contains the text string and the line of code that uses it
+scriptSearch(pattern = "text_string", path = "./file/path/", subdirs = TRUE)
+
+# this just names the scripts that contains the text string
+found_scripts <- scriptSearch(pattern = "text_string", path = "./file/path/", subdirs = TRUE)
+names(found_scripts) # print the the script file names
+
+
+
 #......................................................................
 ## How to extract text ----
 
