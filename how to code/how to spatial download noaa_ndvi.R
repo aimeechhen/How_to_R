@@ -1,3 +1,4 @@
+library(xml2)
 
 # NOAA NDVI data
 #https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ncdc:C01558
@@ -11,7 +12,7 @@ url_2018 <- "https://www.ncei.noaa.gov/data/land-normalized-difference-vegetatio
 library(rvest) #to extract weblinks to files
 # Read the HTML content of the webpage
 webpage <- read_html(url_2018)
-# Extract the links to the files
+# Extract the links to the files ("a" and "href" cannot be changed, its a html thing)
 file_links <- html_attr(html_nodes(webpage, "a"), "href")
 # Filter the links to keep only the files you want to download
 file_links <- file_links[grep(".nc", file_links)]
